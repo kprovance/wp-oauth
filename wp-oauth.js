@@ -1,11 +1,10 @@
 /* global wpoa, wpoa_cvars */
+var $j = jQuery.noConflict();
 
 // After the document has loaded, we hook up our events and initialize any other js functionality.
-$( document ).ready(
-	function() {
-		wpoa.init();
-	}
-)( jQuery );
+$j(function(){
+	wpoa.init();
+});
 
 // Namespace the wpoa functions to prevent global conflicts, using the 'immediately invoked function expression' pattern.
 (function( wpoa ) {

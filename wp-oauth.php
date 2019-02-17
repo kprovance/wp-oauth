@@ -10,7 +10,9 @@ License: GPL2
 */
 
 // start the user session for persisting user/login state during ajax, header redirect, and cross domain calls.
-session_start();
+if ( !isset($_SESSION ) ) {
+	session_start();
+}
 
 /**
  * Class WPOA
@@ -356,7 +358,7 @@ class WPOA {
 		wp_enqueue_script(
 			'wpoa-script',
 			plugin_dir_url( __FILE__ ) . 'wp-oauth.js',
-			array(),
+			array('jquery'),
 			self::PLUGIN_VERSION,
 			true
 		);
@@ -761,14 +763,14 @@ class WPOA {
 				// phpcs:ignore WordPress.DB.DirectDatabaseQuery
 				$query_result = $wpdb->query( $wpdb->prepare( "DELETE FROM $wpdb->usermeta WHERE $wpdb->usermeta.user_id = %d AND $wpdb->usermeta.meta_key = 'wpoa_identity' AND $wpdb->usermeta.umeta_id = %d", $user_id, $wpoa_identity_row ) );
 			}
+			if ( $query_result ) {
+                        	echo wp_json_encode( array( 'result' => 1 ) );
+				die();
+                	}
 		}
 
-		// Notify client of the result.
-		if ( $query_result ) {
-			echo wp_json_encode( array( 'result' => 1 ) );
-		} else {
-			echo wp_json_encode( array( 'result' => 0 ) );
-		}
+		// Notify client of the failure.
+		echo wp_json_encode( array( 'result' => 0 ) );
 
 		die();
 	}
@@ -786,7 +788,7 @@ class WPOA {
 	/**
 	 * Clears the login state.
 	 */
-	private function wpoa_clear_login_state() {
+	public function wpoa_clear_login_state() {
 		unset( $_SESSION['WPOA']['USER_ID'] );
 		unset( $_SESSION['WPOA']['USER_EMAIL'] );
 		unset( $_SESSION['WPOA']['ACCESS_TOKEN'] );
