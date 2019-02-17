@@ -1,15 +1,23 @@
 <?php
+/**
+ * WP-OAuth Facbook config
+ *
+ * @package WP-OAuth
+ */
+
+defined( 'ABSPATH' ) || exit;
 
 // General singleton class.
 require_once 'class-redux-oauth.php';
 
-$oauth = Redux_oAuth::getInstance($this);
+$oauth = Redux_oAuth::getInstance( $this );
+
 $oauth->set_config(
 	array(
 		'scope'              => 'email',
-		'url_auth'           => "https://www.facebook.com/dialog/oauth?",
-		'url_token'          => "https://graph.facebook.com/oauth/access_token?",
-		'url_user'           => "https://graph.facebook.com/me?",
+		'url_auth'           => 'https://www.facebook.com/dialog/oauth?',
+		'url_token'          => 'https://graph.facebook.com/oauth/access_token?',
+		'url_user'           => 'https://graph.facebook.com/me?',
 		'get_oauth_token'    => array(
 			'access_token' => 'access_token',
 			'expires_in'   => 'expires_in',
@@ -24,9 +32,9 @@ $oauth->set_config(
 //			'id'         => 'id',
 //			'email'      => 'email'
 		),
-		'provider'           => "facebook",
+		'provider'           => 'facebook',
 		'code'               => 'code',
 	)
 );
-$oauth->auth_flow();
 
+$oauth->auth_flow();
