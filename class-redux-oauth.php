@@ -196,7 +196,7 @@ if ( ! class_exists( 'Redux_OAuth', false ) ) {
 		 *
 		 * @return false|string
 		 */
-		public function steam( $params, $url ) {
+		public function stream( $params, $url ) {
 			$url_params = http_build_query( $params );
 			$url        = rtrim( $url, '?' );
 
