@@ -1,7 +1,7 @@
 <?php
 
 // General singleton class.
-require_once 'class.redux_oauth.php';
+require_once 'class-redux-oauth.php';
 
 $oauth = Redux_oAuth::getInstance($this);
 $oauth->set_config(
