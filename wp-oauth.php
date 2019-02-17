@@ -1064,7 +1064,7 @@ class WPOA {
 
 		if ( true === $master ) {
 			foreach ( $designs_array as $key => $val ) {
-				$html .= '<option value="">' . $key . '"</option>"';
+				$html .= '<option value="">' . $key . '</option>';
 			}
 
 			$html .= '</select>';
