@@ -610,7 +610,7 @@ class WPOA {
 			// there was a WordPress user logged in, but it is not associated with the now-authenticated user's email address, so associate it now.
 			global $current_user;
 
-			wp_get_curren_user();
+			wp_get_current_user();
 			$user_id = $current_user->ID;
 			$this->wpoa_link_account( $user_id );
 
@@ -757,7 +757,7 @@ class WPOA {
 		global $current_user;
 		global $wpdb;
 
-		if ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_POST['nonce'], 'wpoa-unlink-nonce' ) ) ) ) {
+		if ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_POST['nonce'] ) ), 'wpoa-unlink-nonce' ) ) {
 
 			// get wpoa_identity row index that the user wishes to unlink.
 			$wpoa_identity_row = isset( $_POST['wpoa_identity_row'] ) ? sanitize_text_field( wp_unslash( $_POST['wpoa_identity_row'] ) ) : '';
