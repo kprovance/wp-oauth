@@ -175,6 +175,9 @@ class WPOA {
 		'wpoa_battlenet_api_id'                 => '',
 		// any string.
 		'wpoa_battlenet_api_secret'             => '',
+		'wpoa_slack_api_enabled'                => 0,                                    // 0, 1
+		'wpoa_slack_api_id'                     => '',                                        // any string
+		'wpoa_slack_api_secret'                 => '',                                    // any string
 		// any string.
 		'wpoa_http_util'                        => 'curl',
 		// curl, stream-context.
@@ -631,7 +634,7 @@ class WPOA {
 	 *
 	 * @param string $msg Message.
 	 */
-	private function wpoa_end_login( $msg ) {
+	public function wpoa_end_login( $msg ) {
 		$last_url = $_SESSION['WPOA']['LAST_URL'];
 
 		unset( $_SESSION['WPOA']['LAST_URL'] );
@@ -1005,6 +1008,7 @@ class WPOA {
 		// TODO: don't hard-code the buttons/providers here, we want to be able to add more providers without having to update this function...
 		$html  = '';
 		$html .= $this->wpoa_login_button( 'google', 'Google', $atts );
+		$html .= $this->wpoa_login_button('slack', 'Slack', $atts);
 		$html .= $this->wpoa_login_button( 'facebook', 'Facebook', $atts );
 		$html .= $this->wpoa_login_button( 'linkedin', 'LinkedIn', $atts );
 		$html .= $this->wpoa_login_button( 'github', 'GitHub', $atts );
