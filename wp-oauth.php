@@ -1,16 +1,21 @@
 <?php
-/*
-Plugin Name: WP-OAuth
-Plugin URI: http://github.com/perrybutler/wp-oauth
-Description: A WordPress plugin that allows users to login or register by authenticating with an existing Google, Facebook, LinkedIn, Github, Reddit or Windows Live account via OAuth 2.0. Easily drops into new or existing sites, integrates with existing users.
-Version: 0.4.1
-Author: Perry Butler
-Author URI: http://glassocean.net
-License: GPL2
-*/
+/**
+ * Plugin Name: WP-OAuth
+ * Plugin URI: http://github.com/perrybutler/wp-oauth
+ * Description: A WordPress plugin that allows users to login or register by authenticating with an existing Google, Facebook, LinkedIn, Github, Reddit or Windows Live account via OAuth 2.0. Easily drops into new or existing sites, integrates with existing users.
+ * Version: 0.4.1
+ * Author: Perry Butler
+ * Author URI: http://glassocean.net
+ * License: GPL2
+ *
+ * @package         Redux OAuth
+ * @author          Team Redux (Dovy Paukstys <dovy@reduxframework.com> and Kevin Provance <kevin@reduxframework.com>)
+ * @license         GNU General Public License, version 3
+ * @copyright       2019 Redux.io
+ */
 
 // start the user session for persisting user/login state during ajax, header redirect, and cross domain calls.
-if ( !isset($_SESSION ) ) {
+if ( ! isset( $_SESSION ) ) {
 	session_start();
 }
 
@@ -170,6 +175,9 @@ class WPOA {
 		'wpoa_battlenet_api_id'                 => '',
 		// any string.
 		'wpoa_battlenet_api_secret'             => '',
+		'wpoa_slack_api_enabled'                => 0,                                    // 0, 1
+		'wpoa_slack_api_id'                     => '',                                        // any string
+		'wpoa_slack_api_secret'                 => '',                                    // any string
 		// any string.
 		'wpoa_http_util'                        => 'curl',
 		// curl, stream-context.
@@ -358,7 +366,7 @@ class WPOA {
 		wp_enqueue_script(
 			'wpoa-script',
 			plugin_dir_url( __FILE__ ) . 'wp-oauth.js',
-			array('jquery'),
+			array( 'jquery' ),
 			self::PLUGIN_VERSION,
 			true
 		);
@@ -626,7 +634,7 @@ class WPOA {
 	 *
 	 * @param string $msg Message.
 	 */
-	public  function wpoa_end_login( $msg ) {
+	public function wpoa_end_login( $msg ) {
 		$last_url = $_SESSION['WPOA']['LAST_URL'];
 
 		unset( $_SESSION['WPOA']['LAST_URL'] );
@@ -763,10 +771,12 @@ class WPOA {
 				// phpcs:ignore WordPress.DB.DirectDatabaseQuery
 				$query_result = $wpdb->query( $wpdb->prepare( "DELETE FROM $wpdb->usermeta WHERE $wpdb->usermeta.user_id = %d AND $wpdb->usermeta.meta_key = 'wpoa_identity' AND $wpdb->usermeta.umeta_id = %d", $user_id, $wpoa_identity_row ) );
 			}
+
 			if ( $query_result ) {
-                        	echo wp_json_encode( array( 'result' => 1 ) );
+				echo wp_json_encode( array( 'result' => 1 ) );
+
 				die();
-                	}
+			}
 		}
 
 		// Notify client of the failure.
@@ -998,6 +1008,7 @@ class WPOA {
 		// TODO: don't hard-code the buttons/providers here, we want to be able to add more providers without having to update this function...
 		$html  = '';
 		$html .= $this->wpoa_login_button( 'google', 'Google', $atts );
+		$html .= $this->wpoa_login_button('slack', 'Slack', $atts);
 		$html .= $this->wpoa_login_button( 'facebook', 'Facebook', $atts );
 		$html .= $this->wpoa_login_button( 'linkedin', 'LinkedIn', $atts );
 		$html .= $this->wpoa_login_button( 'github', 'GitHub', $atts );
@@ -1057,7 +1068,7 @@ class WPOA {
 
 		if ( true === $master ) {
 			foreach ( $designs_array as $key => $val ) {
-				$html .= '<option value="">' . $key . '"</option>"';
+				$html .= '<option value="">' . $key . '</option>';
 			}
 
 			$html .= '</select>';
