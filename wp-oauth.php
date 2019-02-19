@@ -193,6 +193,7 @@ class WPOA {
 	 * WPOA constructor.
 	 */
 	public function __construct() {
+
 		// hook activation and deactivation for the plugin.
 		register_activation_hook( __FILE__, array( $this, 'wpoa_activate' ) );
 		register_deactivation_hook( __FILE__, array( $this, 'wpoa_deactivate' ) );
@@ -1061,7 +1062,9 @@ class WPOA {
 	 */
 	public function wpoa_login_form_designs_selector( $id = '', $master = false ) {
 		$html          = '';
+
 		$designs_json  = get_option( 'wpoa_login_form_designs' );
+var_dump($designs_json);
 		$designs_array = json_decode( $designs_json );
 		$name          = str_replace( '-', '_', $id );
 		$html         .= '<select id="' . $id . '" name="' . $name . '">';
@@ -1131,6 +1134,8 @@ class WPOA {
 				break;
 			}
 		}
+echo 'FICK!!';
+var_dump($found);
 		if ( $found ) {
 			return true;
 		} else {
