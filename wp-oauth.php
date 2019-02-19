@@ -203,7 +203,6 @@ class WPOA {
 		// hook init event to handle plugin initialization.
 		add_action( 'init', array( $this, 'init' ) );
 
-		// $this->wpoa_restore_default_settings();
 	}
 
 	/**
