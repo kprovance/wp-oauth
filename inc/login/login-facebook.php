@@ -8,7 +8,7 @@
 defined( 'ABSPATH' ) || exit;
 
 // General singleton class.
-require_once 'class-redux-oauth.php';
+require_once WPOA_::$dir . 'inc/class-redux-oauth.php';
 
 $oauth = Redux_oAuth::getInstance( $this );
 

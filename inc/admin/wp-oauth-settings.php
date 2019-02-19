@@ -111,7 +111,7 @@ $cc_ux       = wpoa_cc_ux();
 				<div class='form-padding'>
 					<div id="wpoa-logo" style="width:64px; height:64px; float:right; background-size:100% 100%;"></div>
 					<p>
-						<span style="font-size:1.1em;"><strong>WP-OAuth <?php echo esc_html( WPOA::PLUGIN_VERSION ); ?></strong></span>
+						<span style="font-size:1.1em;"><strong>WP-OAuth <?php echo esc_html( WPOA_::$version ); ?></strong></span>
 						<br/>
 						by
 						<a href="http://glassocean.net" target="_blank"><strong>Perry Butler</strong></a>
@@ -485,7 +485,7 @@ $cc_ux       = wpoa_cc_ux();
 								<th scope='row'>Custom form to show on the login screen: <a href="#" class="tip-button">[?]</a>
 								</th>
 								<td>
-									<?php echo WPOA::wpoa_login_form_designs_selector( 'wpoa-login-form-show-login-screen' ); // WPCS: XSS ok. ?>
+									<?php echo WPOA_Admin::login_form_designs_selector( 'wpoa-login-form-show-login-screen' ); // WPCS: XSS ok. ?>
 									<p class="tip-message">Create or manage these login form designs in the CUSTOM LOGIN
 										FORM DESIGNS section.
 									</p>
@@ -496,7 +496,7 @@ $cc_ux       = wpoa_cc_ux();
 									<a href="#" class="tip-button">[?]</a>
 								</th>
 								<td>
-									<?php echo WPOA::wpoa_login_form_designs_selector( 'wpoa-login-form-show-profile-page' ); // WPCS: XSS ok. ?>
+									<?php echo WPOA_Admin::login_form_designs_selector( 'wpoa-login-form-show-profile-page' ); // WPCS: XSS ok. ?>
 									<p class="tip-message">Create or manage these login form designs in the CUSTOM LOGIN
 										FORM DESIGNS section.
 									</p>
@@ -507,7 +507,7 @@ $cc_ux       = wpoa_cc_ux();
 									<a href="#" class="tip-button">[?]</a>
 								</th>
 								<td>
-									<?php echo WPOA::wpoa_login_form_designs_selector( 'wpoa-login-form-show-comments-section' ); // WPCS: XSS ok. ?>
+									<?php echo WPOA_Admin::login_form_designs_selector( 'wpoa-login-form-show-comments-section' ); // WPCS: XSS ok. ?>
 									<p class="tip-message">Create or manage these login form designs in the CUSTOM LOGIN
 										FORM DESIGNS section.
 									</p>
@@ -534,7 +534,7 @@ $cc_ux       = wpoa_cc_ux();
 							<tr valign='top' class="has-tip">
 								<th scope='row'>Design: <a href="#" class="tip-button">[?]</a></th>
 								<td>
-									<?php echo WPOA::wpoa_login_form_designs_selector( 'wpoa-login-form-design', true ); // WPCS: XSS ok. ?>
+									<?php echo WPOA_Admin::login_form_designs_selector( 'wpoa-login-form-design', true ); // WPCS: XSS ok. ?>
 									<p>
 										<input type="button" id="wpoa-login-form-new" class="button" value="New">
 										<input type="button" id="wpoa-login-form-edit" class="button" value="Edit">
