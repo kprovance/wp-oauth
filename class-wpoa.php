@@ -11,11 +11,11 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'WPOA_' ) ) {
+if ( ! class_exists( 'WPOA' ) ) {
 	/**
 	 * Class WPOA
 	 */
-	class WPOA_ {
+	class WPOA {
 
 		/**
 		 * Plugin version.

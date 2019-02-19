@@ -38,7 +38,7 @@ if ( ! class_exists( 'WPOA_Comments' ) ) {
 			if ( 'None' !== $design ) {
 
 				// TODO: we need to use $settings defaults here, not hard-coded defaults...
-				$html                  .= WPOA_::$login->login_form_content( $design, 'none', 'buttons-column', 'Connect with', 'center', 'conditional', 'conditional', 'Please login:', 'You are already logged in.', 'Logging in...', 'Logging out...' );
+				$html                  .= WPOA::$login->login_form_content( $design, 'none', 'buttons-column', 'Connect with', 'center', 'conditional', 'conditional', 'Please login:', 'You are already logged in.', 'Logging in...', 'Logging out...' );
 				$fields['logged_in_as'] = $html;
 			}
 
@@ -55,7 +55,7 @@ if ( ! class_exists( 'WPOA_Comments' ) ) {
 			if ( 'None' !== $design ) {
 
 				// TODO: we need to use $settings defaults here, not hard-coded defaults...
-				$html .= WPOA_::$login->login_form_content( $design, 'none', 'buttons-column', 'Connect with', 'center', 'conditional', 'conditional', 'Please login:', 'You are already logged in.', 'Logging in...', 'Logging out...' );
+				$html .= WPOA::$login->login_form_content( $design, 'none', 'buttons-column', 'Connect with', 'center', 'conditional', 'conditional', 'Please login:', 'You are already logged in.', 'Logging in...', 'Logging out...' );
 			}
 
 			echo $html; // WPCS: XSS ok.

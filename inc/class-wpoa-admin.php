@@ -31,7 +31,7 @@ if ( ! class_exists( 'WPOA_Admin' ) ) {
 		 * Registers all settings that have been defined at the top of the plugin
 		 */
 		public function register_settings() {
-			foreach ( WPOA_::$settings as $setting_name => $default_value ) {
+			foreach ( WPOA::$settings as $setting_name => $default_value ) {
 				register_setting( 'wpoa_settings', $setting_name );
 			}
 		}
@@ -62,7 +62,7 @@ if ( ! class_exists( 'WPOA_Admin' ) ) {
 
 			$blog_url = rtrim( site_url(), '/' ) . '/';
 
-			include WPOA_::$dir . 'inc/admin/wp-oauth-settings.php';
+			include WPOA::$dir . 'inc/admin/wp-oauth-settings.php';
 		}
 
 		/**

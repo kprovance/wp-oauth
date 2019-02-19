@@ -33,19 +33,19 @@ if (!$_SESSION['WPOA']['LAST_URL']) {
 # AUTHENTICATION FLOW #
 // the oauth 2.0 authentication flow will start in this script and make several calls to the third-party authentication provider which in turn will make callbacks to this script that we continue to handle until the login completes with a success or failure:
 if (!CLIENT_ENABLED) {
-	WPOA_::$login->end_login("This third-party authentication provider has not been enabled. Please notify the admin or try again later.");
+	WPOA::$login->end_login("This third-party authentication provider has not been enabled. Please notify the admin or try again later.");
 }
 elseif (!CLIENT_ID || !CLIENT_SECRET) {
 	// do not proceed if id or secret is null:
-	WPOA_::$login->end_login("This third-party authentication provider has not been configured with an API key/secret. Please notify the admin or try again later.");
+	WPOA::$login->end_login("This third-party authentication provider has not been configured with an API key/secret. Please notify the admin or try again later.");
 }
 elseif (isset($_GET['error_description'])) {
 	// do not proceed if an error was detected:
-	WPOA_::$login->end_login($_GET['error_description']);
+	WPOA::$login->end_login($_GET['error_description']);
 }
 elseif (isset($_GET['error_message'])) {
 	// do not proceed if an error was detected:
-	WPOA_::$login->end_login($_GET['error_message']);
+	WPOA::$login->end_login($_GET['error_message']);
 }
 elseif (isset($_GET['code'])) {
 	// post-auth phase, verify the state:
@@ -54,24 +54,24 @@ elseif (isset($_GET['code'])) {
 		$oauth_identity = get_oauth_token($this);
 		// get the user's third-party identity and attempt to login/register a matching wordpress user account:
 		//$oauth_identity = get_oauth_identity($this);
-		WPOA_::$login->login_user($oauth_identity);
+		WPOA::$login->login_user($oauth_identity);
 	}
 	else {
 		// possible CSRF attack, end the login with a generic message to the user and a detailed message to the admin/logs in case of abuse:
 		// TODO: report detailed message to admin/logs here...
-		WPOA_::$login->end_login("Sorry, we couldn't log you in. Please notify the admin or try again later.");
+		WPOA::$login->end_login("Sorry, we couldn't log you in. Please notify the admin or try again later.");
 	}
 }
 else {
 	// pre-auth, start the auth process:
 	if ((empty($_SESSION['WPOA']['EXPIRES_AT'])) || (time() > $_SESSION['WPOA']['EXPIRES_AT'])) {
 		// expired token; clear the state:
-		WPOA_::$login->clear_state();
+		WPOA::$login->clear_state();
 	}
 	get_oauth_code($this);
 }
 // we shouldn't be here, but just in case...
-WPOA_::$login->end_login("Sorry, we couldn't log you in. The authentication flow terminated in an unexpected way. Please notify the admin or try again later.");
+WPOA::$login->end_login("Sorry, we couldn't log you in. The authentication flow terminated in an unexpected way. Please notify the admin or try again later.");
 # END OF AUTHENTICATION FLOW #
 
 # AUTHENTICATION FLOW HELPER FUNCTIONS #
@@ -124,7 +124,7 @@ function get_oauth_token($wpoa) {
 			$context = $context  = stream_context_create($opts);
 			$result = @file_get_contents($url, false, $context);
 			if ($result === false) {
-				WPOA_::$login->end_login("Sorry, we couldn't log you in. Could not retrieve access token via stream context. Please notify the admin or try again later.");
+				WPOA::$login->end_login("Sorry, we couldn't log you in. Could not retrieve access token via stream context. Please notify the admin or try again later.");
 			}
 			break;
 	}
@@ -136,7 +136,7 @@ function get_oauth_token($wpoa) {
 	// handle the result:
 	if (!$access_token) { // PROVIDER SPECIFIC: ...
 		// malformed access token result detected:
-		WPOA_::$login->end_login("Sorry, we couldn't log you in. Malformed access token result detected. Please notify the admin or try again later.");
+		WPOA::$login->end_login("Sorry, we couldn't log you in. Malformed access token result detected. Please notify the admin or try again later.");
 	}
 	else {
 		$_SESSION['WPOA']['ACCESS_TOKEN'] = $access_token;
@@ -148,7 +148,7 @@ function get_oauth_token($wpoa) {
 		$oauth_identity['id'] = $result_obj['user']['id']; // PROVIDER SPECIFIC: this is how Google returns the user's unique id
 		//$oauth_identity['email'] = $result_obj['emails'][0]['value']; // PROVIDER SPECIFIC: Google returns an array of email addresses. To respect privacy we currently don't collect the user's email address.
 		if (!$oauth_identity['id']) {
-			WPOA_::$login->end_login("Sorry, we couldn't log you in. User identity was not found. Please notify the admin or try again later.");
+			WPOA::$login->end_login("Sorry, we couldn't log you in. User identity was not found. Please notify the admin or try again later.");
 		}
 		return $oauth_identity;
 	}
@@ -186,7 +186,7 @@ function get_oauth_identity($wpoa) {
 			$context = $context  = stream_context_create($opts);
 			$result = @file_get_contents($url, false, $context);
 			if ($result === false) {
-				WPOA_::$login->end_login("Sorry, we couldn't log you in. Could not retrieve user identity via stream context. Please notify the admin or try again later.");
+				WPOA::$login->end_login("Sorry, we couldn't log you in. Could not retrieve user identity via stream context. Please notify the admin or try again later.");
 			}
 			$result_obj = json_decode($result, true);
 			break;
@@ -197,7 +197,7 @@ function get_oauth_identity($wpoa) {
 	$oauth_identity['id'] = $result_obj['id']; // PROVIDER SPECIFIC: this is how Google returns the user's unique id
 	//$oauth_identity['email'] = $result_obj['emails'][0]['value']; // PROVIDER SPECIFIC: Google returns an array of email addresses. To respect privacy we currently don't collect the user's email address.
 	if (!$oauth_identity['id']) {
-		WPOA_::$login->end_login("Sorry, we couldn't log you in. User identity was not found. Please notify the admin or try again later.");
+		WPOA::$login->end_login("Sorry, we couldn't log you in. User identity was not found. Please notify the admin or try again later.");
 	}
 	return $oauth_identity;
 }

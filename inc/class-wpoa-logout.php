@@ -44,7 +44,7 @@ if ( ! class_exists( 'WPOA_Logout' ) ) {
 
 			unset( $_SESSION['WPOA']['LAST_URL'] );
 
-			WPOA_::$login->clear_state();
+			WPOA::$login->clear_state();
 			$redirect_method = get_option( 'wpoa_logout_redirect' );
 			$redirect_url    = '';
 

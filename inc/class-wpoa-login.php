@@ -339,7 +339,7 @@ if ( ! class_exists( 'WPOA_Login' ) ) {
 
 			$_SESSION['WPOA']['RESULT'] = $msg;
 
-			WPOA_::$login->clear_state();
+			WPOA::$login->clear_state();
 			$redirect_method = get_option( 'wpoa_login_redirect' );
 
 			$redirect_url = '';
@@ -394,5 +394,5 @@ if ( ! class_exists( 'WPOA_Login' ) ) {
 
 	}
 
-	WPOA_::$login = new WPOA_Login();
+	WPOA::$login = new WPOA_Login();
 }

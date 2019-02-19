@@ -55,7 +55,7 @@ if ( ! class_exists( 'WPOA_Shortcodes' ) ) {
 			// $a['show_login'] = filter_var($a['show_login'], FILTER_VALIDATE_BOOLEAN);
 			// $a['show_logout'] = filter_var($a['show_logout'], FILTER_VALIDATE_BOOLEAN);.
 			// Get the shortcode content.
-			$html = WPOA_::$login->login_form_content( $a['design'], $a['icon_set'], $a['layout'], $a['button_prefix'], $a['align'], $a['show_login'], $a['show_logout'], $a['logged_out_title'], $a['logged_in_title'], $a['logging_in_title'], $a['logging_out_title'], $a['style'], $a['class'] );
+			$html = WPOA::$login->login_form_content( $a['design'], $a['icon_set'], $a['layout'], $a['button_prefix'], $a['align'], $a['show_login'], $a['show_logout'], $a['logged_out_title'], $a['logged_in_title'], $a['logging_in_title'], $a['logging_out_title'], $a['style'], $a['class'] );
 
 			return $html;
 		}

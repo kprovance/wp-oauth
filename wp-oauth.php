@@ -25,10 +25,10 @@ if ( ! isset( $_SESSION ) ) {
 // Require the main plugin class.
 require_once plugin_dir_path( __FILE__ ) . 'class-wpoa.php';
 
-WPOA_::$version = '0.4.1';
+WPOA::$version = '0.4.1';
 
 // Register hooks that are fired when the plugin is activated and deactivated, respectively.
-register_activation_hook( __FILE__, array( 'WPOA_', 'activate' ) );
-register_deactivation_hook( __FILE__, array( 'WPOA_', 'deactivate' ) );
+register_activation_hook( __FILE__, array( 'WPOA', 'activate' ) );
+register_deactivation_hook( __FILE__, array( 'WPOA', 'deactivate' ) );
 
-WPOA_::instance();
+WPOA::instance();

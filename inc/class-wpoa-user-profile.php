@@ -75,7 +75,7 @@ if ( ! class_exists( 'WPOA_User_Profile' ) ) {
 
 			if ( 'None' !== $design ) {
 				// TODO: we need to use $settings defaults here, not hard-coded defaults...
-				echo WPOA_::$login->login_form_content( $design, 'none', 'buttons-row', 'Link', 'left', 'always', 'never', 'Select a provider:', 'Select a provider:', 'Authenticating...', '' ); // WPCS: XSS ok.
+				echo WPOA::$login->login_form_content( $design, 'none', 'buttons-row', 'Link', 'left', 'always', 'never', 'Select a provider:', 'Select a provider:', 'Authenticating...', '' ); // WPCS: XSS ok.
 			}
 
 			echo '</div>';

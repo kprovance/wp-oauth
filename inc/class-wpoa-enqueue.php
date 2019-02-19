@@ -43,7 +43,7 @@ if ( ! class_exists( 'WPOA_Enqueue' ) ) {
 				'template_directory'    => get_bloginfo( 'template_directory' ),
 				'stylesheet_directory'  => get_bloginfo( 'stylesheet_directory' ),
 				'plugins_url'           => plugins_url(),
-				'plugin_dir_url'        => WPOA_::$url,
+				'plugin_dir_url'        => WPOA::$url,
 				'url'                   => get_bloginfo( 'url' ),
 				'logout_url'            => wp_logout_url(),
 				// other.
@@ -55,9 +55,9 @@ if ( ! class_exists( 'WPOA_Enqueue' ) ) {
 			// load the core plugin scripts/styles.
 			wp_enqueue_script(
 				'wpoa-script',
-				WPOA_::$url . 'assets/js/wp-oauth.js',
+				WPOA::$url . 'assets/js/wp-oauth.js',
 				array( 'jquery' ),
-				WPOA_::$version,
+				WPOA::$version,
 				true
 			);
 
@@ -69,9 +69,9 @@ if ( ! class_exists( 'WPOA_Enqueue' ) ) {
 
 			wp_enqueue_style(
 				'wpoa-style',
-				WPOA_::$url . 'assets/css/wp-oauth.css',
+				WPOA::$url . 'assets/css/wp-oauth.css',
 				array(),
-				WPOA_::$version,
+				WPOA::$version,
 				'all'
 			);
 		}
@@ -88,7 +88,7 @@ if ( ! class_exists( 'WPOA_Enqueue' ) ) {
 				'template_directory'    => get_bloginfo( 'template_directory' ),
 				'stylesheet_directory'  => get_bloginfo( 'stylesheet_directory' ),
 				'plugins_url'           => plugins_url(),
-				'plugin_dir_url'        => WPOA_::$url,
+				'plugin_dir_url'        => WPOA::$url,
 				'url'                   => get_bloginfo( 'url' ),
 				// other.
 				'show_login_messages'   => get_option( 'wpoa_show_login_messages' ),
@@ -99,9 +99,9 @@ if ( ! class_exists( 'WPOA_Enqueue' ) ) {
 			// load the core plugin scripts/styles.
 			wp_enqueue_script(
 				'wpoa-script',
-				WPOA_::$url . 'assets/js/wp-oauth.js',
+				WPOA::$url . 'assets/js/wp-oauth.js',
 				array(),
-				WPOA_::$version,
+				WPOA::$version,
 				true
 			);
 
@@ -113,9 +113,9 @@ if ( ! class_exists( 'WPOA_Enqueue' ) ) {
 
 			wp_enqueue_style(
 				'wpoa-style',
-				WPOA_::$url . 'assets/css/wp-oauth.css',
+				WPOA::$url . 'assets/css/wp-oauth.css',
 				array(),
-				WPOA_::$version,
+				WPOA::$version,
 				'all'
 			);
 		}
@@ -132,7 +132,7 @@ if ( ! class_exists( 'WPOA_Enqueue' ) ) {
 				'template_directory'    => get_bloginfo( 'template_directory' ),
 				'stylesheet_directory'  => get_bloginfo( 'stylesheet_directory' ),
 				'plugins_url'           => plugins_url(),
-				'plugin_dir_url'        => WPOA_::$url,
+				'plugin_dir_url'        => WPOA::$url,
 				'url'                   => get_bloginfo( 'url' ),
 				// login specific.
 				'hide_login_form'       => get_option( 'wpoa_hide_wordpress_login_form' ),
@@ -147,9 +147,9 @@ if ( ! class_exists( 'WPOA_Enqueue' ) ) {
 			// load the core plugin scripts/styles.
 			wp_enqueue_script(
 				'wpoa-script',
-				WPOA_::$url . 'assets/js/wp-oauth.js',
+				WPOA::$url . 'assets/js/wp-oauth.js',
 				array(),
-				WPOA_::$version,
+				WPOA::$version,
 				true
 			);
 
@@ -161,9 +161,9 @@ if ( ! class_exists( 'WPOA_Enqueue' ) ) {
 
 			wp_enqueue_style(
 				'wpoa-style',
-				WPOA_::$url . 'assets/css/wp-oauth.css',
+				WPOA::$url . 'assets/css/wp-oauth.css',
 				array(),
-				WPOA_::$version,
+				WPOA::$version,
 				'all'
 			);
 		}

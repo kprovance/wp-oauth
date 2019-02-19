@@ -60,16 +60,16 @@ if ( ! class_exists( 'Redux_OAuth', false ) ) {
 			// authentication provider which in turn will make callbacks to this script that we continue to handle until
 			// the login completes with a success or failure.
 			if ( ! $this->config['client_enabled'] ) {
-				WPOA_::$login->end_login( 'This third-party authentication provider has not been enabled. Please notify the admin or try again later.' );
+				WPOA::$login->end_login( 'This third-party authentication provider has not been enabled. Please notify the admin or try again later.' );
 			} elseif ( ! $this->config['client_id'] || ! $this->config['client_secret'] ) {
 				// Do not proceed if id or secret is null.
-				WPOA_::$login->end_login( 'This third-party authentication provider has not been configured with an API key/secret. Please notify the admin or try again later.' );
+				WPOA::$login->end_login( 'This third-party authentication provider has not been configured with an API key/secret. Please notify the admin or try again later.' );
 			} elseif ( isset( $_GET['error_description'] ) ) {
 				// do not proceed if an error was detected.
-				WPOA_::$login->end_login( $_GET['error_description'] );
+				WPOA::$login->end_login( $_GET['error_description'] );
 			} elseif ( isset( $_GET['error_message'] ) ) {
 				// do not proceed if an error was detected.
-				WPOA_::$login->end_login( $_GET['error_message'] );
+				WPOA::$login->end_login( $_GET['error_message'] );
 			} elseif ( isset( $_GET['code'] ) ) {
 				// post-auth phase, verify the state.
 				if ( $_SESSION['WPOA']['STATE'] === $_GET['state'] ) {
@@ -77,24 +77,24 @@ if ( ! class_exists( 'Redux_OAuth', false ) ) {
 					$this->get_oauth_token();
 					// get the user's third-party identity and attempt to login/register a matching WordPress user account.
 					$oauth_identity = $this->get_oauth_identity( $this );
-					WPOA_::$login->login_user( $oauth_identity );
+					WPOA::$login->login_user( $oauth_identity );
 				} else {
 					// possible CSRF attack, end the login with a generic message to the user and a detailed message to the admin/logs in case of abuse:
 					// TODO: report detailed message to admin/logs here...
-					WPOA_::$login->end_login( "Sorry, we couldn't log you in. Please notify the admin or try again later." );
+					WPOA::$login->end_login( "Sorry, we couldn't log you in. Please notify the admin or try again later." );
 				}
 			} else {
 				// pre-auth, start the auth process.
 				if ( ( empty( $_SESSION['WPOA']['EXPIRES_AT'] ) ) || ( time() > $_SESSION['WPOA']['EXPIRES_AT'] ) ) {
 					// expired token; clear the state.
-					WPOA_::$login->clear_state();
+					WPOA::$login->clear_state();
 				}
 
 				$this->get_oauth_code();
 			}
 
 			// we shouldn't be here, but just in case...
-			WPOA_::$login->end_login( 'Sorry, we couldn\'t log you in. The authentication flow terminated in an unexpected way. Please notify the admin or try again later.' );
+			WPOA::$login->end_login( 'Sorry, we couldn\'t log you in. The authentication flow terminated in an unexpected way. Please notify the admin or try again later.' );
 
 			/* END OF AUTHENTICATION FLOW */
 		}
@@ -212,7 +212,7 @@ if ( ! class_exists( 'Redux_OAuth', false ) ) {
 			$result  = @file_get_contents( $url, false, $context );
 
 			if ( false === $result ) {
-				WPOA_::$login->end_login( "Sorry, we couldn't log you in. Could not retrieve access token via stream context. Please notify the admin or try again later." );
+				WPOA::$login->end_login( "Sorry, we couldn't log you in. Could not retrieve access token via stream context. Please notify the admin or try again later." );
 			}
 
 			return $result;
@@ -255,7 +255,7 @@ if ( ! class_exists( 'Redux_OAuth', false ) ) {
 			if ( ! $access_token || ! $expires_in ) {
 
 				// malformed access token result detected.
-				WPOA_::$login->end_login( "Sorry, we couldn't log you in. Malformed access token result detected. Please notify the admin or try again later." );
+				WPOA::$login->end_login( "Sorry, we couldn't log you in. Malformed access token result detected. Please notify the admin or try again later." );
 			} else {
 				$_SESSION['WPOA']['ACCESS_TOKEN']  = $access_token;
 				$_SESSION['WPOA']['REFRESH_TOKEN'] = $refresh_token;
@@ -301,7 +301,7 @@ if ( ! class_exists( 'Redux_OAuth', false ) ) {
 			}
 
 			if ( ! $oauth_identity['id'] ) {
-				WPOA_::$login->end_login( 'Sorry, we couldn\'t log you in. User identity was not found. Please notify the admin or try again later.' );
+				WPOA::$login->end_login( 'Sorry, we couldn\'t log you in. User identity was not found. Please notify the admin or try again later.' );
 			}
 
 			return $oauth_identity;

@@ -111,7 +111,7 @@ $cc_ux       = wpoa_cc_ux();
 				<div class='form-padding'>
 					<div id="wpoa-logo" style="width:64px; height:64px; float:right; background-size:100% 100%;"></div>
 					<p>
-						<span style="font-size:1.1em;"><strong>WP-OAuth <?php echo esc_html( WPOA_::$version ); ?></strong></span>
+						<span style="font-size:1.1em;"><strong>WP-OAuth <?php echo esc_html( WPOA::$version ); ?></strong></span>
 						<br/>
 						by
 						<a href="http://glassocean.net" target="_blank"><strong>Perry Butler</strong></a>
