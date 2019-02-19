@@ -369,6 +369,7 @@
 						url: wpoa_cvars.ajaxurl,
 						data: post_data,
 						success: function( json_response ) {
+
 							var oresponse = JSON.parse( json_response );
 
 							if ( 1 === oresponse.result ) {
