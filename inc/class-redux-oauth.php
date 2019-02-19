@@ -34,7 +34,7 @@ if ( ! class_exists( 'Redux_OAuth', false ) ) {
 		 *
 		 * @var array
 		 */
-		private $config = array();
+		public $config = array();
 
 		/**
 		 * Redux_oAuth constructor.
