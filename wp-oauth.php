@@ -202,7 +202,6 @@ class WPOA {
 
 		// hook init event to handle plugin initialization.
 		add_action( 'init', array( $this, 'init' ) );
-
 	}
 
 	/**
