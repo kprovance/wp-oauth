@@ -175,9 +175,9 @@ class WPOA {
 		'wpoa_battlenet_api_id'                 => '',
 		// any string.
 		'wpoa_battlenet_api_secret'             => '',
-		'wpoa_slack_api_enabled'                => 0,                                    // 0, 1
-		'wpoa_slack_api_id'                     => '',                                        // any string
-		'wpoa_slack_api_secret'                 => '',                                    // any string
+		'wpoa_slack_api_enabled'                => 0,   // 0, 1
+		'wpoa_slack_api_id'                     => '',  // any string.
+		'wpoa_slack_api_secret'                 => '',  // any string.
 		// any string.
 		'wpoa_http_util'                        => 'curl',
 		// curl, stream-context.
@@ -202,6 +202,8 @@ class WPOA {
 
 		// hook init event to handle plugin initialization.
 		add_action( 'init', array( $this, 'init' ) );
+
+		// $this->wpoa_restore_default_settings();
 	}
 
 	/**
@@ -339,6 +341,22 @@ class WPOA {
 			add_filter( 'admin_footer', array( $this, 'wpoa_push_login_messages' ) );
 			add_filter( 'login_footer', array( $this, 'wpoa_push_login_messages' ) );
 		}
+
+		add_filter( 'pre_update_option_wpoa_login_form_designs', array( $this, 'save_fix_json' ), 10, 2 );
+	}
+
+	/**
+	 * Convert encodedurl back to JSON for database save.
+	 *
+	 * @param mixed $new_value New value.
+	 * @param mixed $old_value Old value.
+	 *
+	 * @return string
+	 */
+	public function save_fix_json( $new_value, $old_value ) {
+		$new_value = rawurldecode( $new_value );
+
+		return $new_value;
 	}
 
 	/**
@@ -1008,7 +1026,7 @@ class WPOA {
 		// TODO: don't hard-code the buttons/providers here, we want to be able to add more providers without having to update this function...
 		$html  = '';
 		$html .= $this->wpoa_login_button( 'google', 'Google', $atts );
-		$html .= $this->wpoa_login_button('slack', 'Slack', $atts);
+		$html .= $this->wpoa_login_button( 'slack', 'Slack', $atts );
 		$html .= $this->wpoa_login_button( 'facebook', 'Facebook', $atts );
 		$html .= $this->wpoa_login_button( 'linkedin', 'LinkedIn', $atts );
 		$html .= $this->wpoa_login_button( 'github', 'GitHub', $atts );
@@ -1060,11 +1078,13 @@ class WPOA {
 	 * @return string
 	 */
 	public function wpoa_login_form_designs_selector( $id = '', $master = false ) {
-		$html          = '';
+		$html = '';
+
 		$designs_json  = get_option( 'wpoa_login_form_designs' );
 		$designs_array = json_decode( $designs_json );
-		$name          = str_replace( '-', '_', $id );
-		$html         .= '<select id="' . $id . '" name="' . $name . '">';
+
+		$name  = str_replace( '-', '_', $id );
+		$html .= '<select id="' . $id . '" name="' . $name . '">';
 
 		if ( true === $master ) {
 			foreach ( $designs_array as $key => $val ) {
@@ -1072,7 +1092,7 @@ class WPOA {
 			}
 
 			$html .= '</select>';
-			$html .= '<input type="hidden" id="wpoa-login-form-designs" name="wpoa_login_form_designs" value="' . $designs_json . '">';
+			$html .= '<input type="hidden" id="wpoa-login-form-designs" name="wpoa_login_form_designs" value="' . rawurlencode( $designs_json ) . '">';
 		} else {
 			$html .= '<option value="None">None</option>';
 			foreach ( $designs_array as $key => $val ) {
