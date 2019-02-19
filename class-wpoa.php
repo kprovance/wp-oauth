@@ -377,6 +377,5 @@ if ( ! class_exists( 'WPOA' ) ) {
 
 			return $url;
 		}
-		
 	}
 }

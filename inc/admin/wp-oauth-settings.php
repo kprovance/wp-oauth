@@ -797,34 +797,34 @@ $cc_ux       = wpoa_cc_ux();
 							<tr valign='top'>
 								<th scope='row'>Enabled:</th>
 								<td>
-									<input type='checkbox' name='wpoa_slack_api_enabled' value='1' <?php checked(get_option('wpoa_slack_api_enabled') == 1); ?> />
+									<input type='checkbox' name='wpoa_slack_api_enabled' value='1' <?php checked( '1' === get_option( 'wpoa_slack_api_enabled' ) ); ?> />
 								</td>
 							</tr>
 
 							<tr valign='top'>
 								<th scope='row'>Client ID:</th>
 								<td>
-									<input type='text' name='wpoa_slack_api_id' value='<?php echo get_option('wpoa_slack_api_id'); ?>' />
+									<input type='text' name='wpoa_slack_api_id' value='<?php echo esc_attr( get_option( 'wpoa_slack_api_id' ) ); ?>' />
 								</td>
 							</tr>
 
 							<tr valign='top'>
 								<th scope='row'>Client Secret:</th>
 								<td>
-									<input type='text' name='wpoa_slack_api_secret' value='<?php echo get_option('wpoa_slack_api_secret'); ?>' />
+									<input type='text' name='wpoa_slack_api_secret' value='<?php echo esc_attr( get_option( 'wpoa_slack_api_secret' ) ); ?>' />
 								</td>
 							</tr>
 						</table> <!-- .form-table -->
 						<p>
 							<strong>Instructions:</strong>
+						</p>
 						<ol>
 							<li>Visit  <a href='https://api.slack.com/apps' target="_blank">https://api.slack.com/slack-apps</a>.</li>
 							<li>Click Create a Slack app.</li>
 							<li>Enter the app name and Slack Wordspace.</li>
 							<li>Paste your Client ID/Secret provided by Slack into the fields above, then click the Save all settings button.</li>
 						</ol>
-						</p>
-						<?php submit_button('Save all settings'); ?>
+						<?php submit_button( 'Save all settings' ); ?>
 					</div> <!-- .form-padding -->
 				</div> <!-- .wpoa-settings-section -->
 				<!-- END Login with Slack section -->
