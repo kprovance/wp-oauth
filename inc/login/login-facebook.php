@@ -28,10 +28,6 @@ $oauth->set_config(
 				'fields' => 'id,email,name,first_name,last_name,gender,picture,timezone',
 			),
 		),
-		'get_oauth_identity' => array(
-//			'id'         => 'id',
-//			'email'      => 'email'
-		),
 		'provider'           => 'facebook',
 		'code'               => 'code',
 	)

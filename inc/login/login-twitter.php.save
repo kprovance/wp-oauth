@@ -1,6 +1,9 @@
 <?php
 
 require_once WPOA::$dir . 'inc/hybridauth/Hybrid/Auth.php';
+require_once WPOA::$dir . 'inc/hybridauth/Hybrid/Endpoint.php';
+
+//Hybrid_Endpoint::process();
 
 // General singleton class.
 require_once WPOA::$dir . 'inc/class-redux-oauth.php';
@@ -8,16 +11,11 @@ require_once WPOA::$dir . 'inc/class-redux-oauth.php';
 $oauth = Redux_oAuth::getInstance( $this );
 
 $config = array(
-	"base_url" => $oauth->config['redirect_uri'],
+	"base_url" => "https://stg.redux.io/",
 	"providers" => array(
-		//"Facebook" => array(
-		//	"enabled" => true,
-		//	"keys" => array("id" => $oauth->config['client_id'] , "secret" => $oauth->config['client_secret']),
-		//	"trustForwarded" => false,
-		//),
 		"Twitter" => array(
 			"enabled" => true,
-			
+			"keys" => array("key" => "DpKhTUFbzqtVifldu6fB8bxgT", "secret" => "bYjxnYL5TGvgVCt4HHMqlsi6TvTNekvXSkqhHiJlMBWDZHjjYG"),
 			"includeEmail" => true,
 		),
 	),

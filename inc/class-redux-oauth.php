@@ -73,6 +73,7 @@ if ( ! class_exists( 'Redux_OAuth', false ) ) {
 			} elseif ( isset( $_GET['code'] ) ) {
 				// post-auth phase, verify the state.
 				if ( $_SESSION['WPOA']['STATE'] === $_GET['state'] ) {
+
 					// get an access token from the third party provider.
 					$this->get_oauth_token();
 					// get the user's third-party identity and attempt to login/register a matching WordPress user account.
@@ -286,23 +287,24 @@ if ( ! class_exists( 'Redux_OAuth', false ) ) {
 			$oauth_identity             = $result_obj;
 			$oauth_identity['provider'] = $_SESSION['WPOA']['PROVIDER'];
 
-			if ( isset( $this->config['get_oauth_identity']['id'] ) && isset( $oauth_identity[ $this->config['get_oauth_identity']['id'] ] ) ) {
-				if ( 'id' !== $oauth_identity[ $this->config['get_oauth_identity']['id'] ] ) {
-					$oauth_identity['id'] = $oauth_identity[ $this->config['get_oauth_identity']['id'] ];
-					unset( $oauth_identity[ $this->config['get_oauth_identity']['id'] ] );
-				}
-			}
+			//if ( isset( $this->config['get_oauth_identity']['id'] ) && isset( $oauth_identity[ $this->config['get_oauth_identity']['id'] ] ) ) {
+			//	if ( 'id' !== $oauth_identity[ $this->config['get_oauth_identity']['id'] ] ) {
+			//		$oauth_identity['id'] = $oauth_identity[ $this->config['get_oauth_identity']['id'] ];
+			//		unset( $oauth_identity[ $this->config['get_oauth_identity']['id'] ] );
+			//	}
+			//}
 
-			if ( isset( $this->config['get_oauth_identity']['email'] ) && isset( $oauth_identity[ $this->config['get_oauth_identity']['email'] ] ) ) {
-				if ( 'email' !== $oauth_identity[ $this->config['get_oauth_identity']['email'] ] ) {
-					$oauth_identity['id'] = $oauth_identity[ $this->config['get_oauth_identity']['email'] ];
-					unset( $oauth_identity[ $this->config['get_oauth_identity']['email'] ] );
-				}
-			}
+			//if ( isset( $this->config['get_oauth_identity']['email'] ) && isset( $oauth_identity[ $this->config['get_oauth_identity']['email'] ] ) ) {
+			//	if ( 'email' !== $oauth_identity[ $this->config['get_oauth_identity']['email'] ] ) {
+			//		$oauth_identity['id'] = $oauth_identity[ $this->config['get_oauth_identity']['email'] ];
+			//		unset( $oauth_identity[ $this->config['get_oauth_identity']['email'] ] );
+			//	}
+			//}
 
 			if ( ! $oauth_identity['id'] ) {
 				WPOA::$login->end_login( 'Sorry, we couldn\'t log you in. User identity was not found. Please notify the admin or try again later.' );
 			}
+
 
 			return $oauth_identity;
 		}
