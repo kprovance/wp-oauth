@@ -10,7 +10,7 @@ define('CLIENT_ENABLED', get_option('wpoa_github_api_enabled'));
 define('CLIENT_ID', get_option('wpoa_github_api_id'));
 define('CLIENT_SECRET', get_option('wpoa_github_api_secret'));
 define('REDIRECT_URI', rtrim(site_url(), '/') . '/');
-define('SCOPE', 'user'); // PROVIDER SPECIFIC: "user" is the minimum scope required to get the user's id from Github
+define('SCOPE', 'user:email'); // PROVIDER SPECIFIC: "user" is the minimum scope required to get the user's id from Github
 define('URL_AUTH', "https://github.com/login/oauth/authorize?");
 define('URL_TOKEN', "https://github.com/login/oauth/access_token?");
 define('URL_USER', "https://api.github.com/user?");
@@ -170,13 +170,16 @@ function get_oauth_identity($wpoa) {
 				WPOA::$login->end_login("Sorry, we couldn't log you in. Could not retrieve user identity via stream context. Please notify the admin or try again later.");
 			}
 			$result_obj = json_decode($result, true);
+
 			break;
 	}
 	// parse and return the user's oauth identity:
+
 	$oauth_identity = array();
 	$oauth_identity['provider'] = $_SESSION['WPOA']['PROVIDER'];
 	$oauth_identity['id'] = $result_obj['id']; // PROVIDER SPECIFIC: this is how Github returns the user's unique id
-	//$oauth_identity['email'] = $result_obj['email']; //PROVIDER SPECIFIC: this is how Github returns the email address
+	$oauth_identity['email'] = $result_obj['email'];
+	$oauth_identity['name'] = $result_obj['name'];
 	if (!$oauth_identity['id']) {
 		WPOA::$login->end_login("Sorry, we couldn't log you in. User identity was not found. Please notify the admin or try again later.");
 	}

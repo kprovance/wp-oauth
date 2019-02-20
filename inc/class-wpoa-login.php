@@ -261,7 +261,6 @@ if ( ! class_exists( 'WPOA_Login' ) ) {
 		 * @param array $oauth_identity ID.
 		 */
 		public function login_user( $oauth_identity ) {
-
 			// Store the user info in the user session so we can grab it later if we need to register the user.
 			$_SESSION['WPOA']['USER_ID'] = $oauth_identity['id'];
 

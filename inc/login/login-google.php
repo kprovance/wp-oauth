@@ -10,7 +10,7 @@ define('CLIENT_ENABLED', get_option('wpoa_google_api_enabled'));
 define('CLIENT_ID', get_option('wpoa_google_api_id'));
 define('CLIENT_SECRET', get_option('wpoa_google_api_secret'));
 define('REDIRECT_URI', rtrim(site_url(), '/') . '/');
-define('SCOPE', 'profile'); // PROVIDER SPECIFIC: 'profile' is the minimum scope required to get the user's id from Google
+define('SCOPE', 'email'); // PROVIDER SPECIFIC: 'profile' is the minimum scope required to get the user's id from Google
 define('URL_AUTH', "https://accounts.google.com/o/oauth2/auth?");
 define('URL_TOKEN', "https://accounts.google.com/o/oauth2/token?");
 define('URL_USER', "https://www.googleapis.com/plus/v1/people/me?");
@@ -180,11 +180,14 @@ function get_oauth_identity($wpoa) {
 			$result_obj = json_decode($result, true);
 			break;
 	}
+
 	// parse and return the user's oauth identity:
 	$oauth_identity = array();
 	$oauth_identity['provider'] = $_SESSION['WPOA']['PROVIDER'];
 	$oauth_identity['id'] = $result_obj['id']; // PROVIDER SPECIFIC: Google returns the user's OAuth identity as id
-	//$oauth_identity['email'] = $result_obj['emails'][0]['value']; // PROVIDER SPECIFIC: Google returns an array of email addresses. To respect privacy we currently don't collect the user's email address.
+	$oauth_identity['email'] = isset( $result_obj['emails'][0]['value'] ) ? $result_obj['emails'][0]['value'] : '';
+	$oauth_identity['name'] = isset( $result_obj['displayName'] ) ? $result_obj['displayName'] : '';
+
 	if (!$oauth_identity['id']) {
 		WPOA::$login->end_login("Sorry, we couldn't log you in. User identity was not found. Please notify the admin or try again later.");
 	}

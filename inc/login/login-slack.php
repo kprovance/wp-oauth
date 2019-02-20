@@ -12,7 +12,7 @@ define('CLIENT_ENABLED', get_option('wpoa_slack_api_enabled'));
 define('CLIENT_ID', get_option('wpoa_slack_api_id'));
 define('CLIENT_SECRET', get_option('wpoa_slack_api_secret'));
 define('REDIRECT_URI', rtrim(site_url(), '/') . '/');
-define('SCOPE', 'identity.basic'); // PROVIDER SPECIFIC: 'profile' is the minimum scope required to get the user's id from Google
+define('SCOPE', 'identity.basic, identity.email'); // PROVIDER SPECIFIC: 'profile' is the minimum scope required to get the user's id from Google
 define('URL_AUTH', "https://slack.com/oauth/authorize?");
 define('URL_TOKEN', "https://slack.com/api/oauth.access?");
 define('URL_USER', "https://slack.com/api/users.identity?");
@@ -130,6 +130,7 @@ function get_oauth_token($wpoa) {
 	}
 	// parse the result:
 	$result_obj = json_decode($result, true); // PROVIDER SPECIFIC: Slack encodes the access token result as json by default
+
 	$access_token = $result_obj['access_token']; // PROVIDER SPECIFIC: this is how Slack returns the access token KEEP THIS PROTECTED!
 	// $expires_in = $result_obj['expires_in']; // PROVIDER SPECIFIC: Slack not returns the access token's expiration
 	// $expires_at = time() + $expires_in;
@@ -186,6 +187,9 @@ function get_oauth_identity($wpoa) {
 	$oauth_identity = array();
 	$oauth_identity['provider'] = $_SESSION['WPOA']['PROVIDER'];
 	$oauth_identity['id'] = $result_obj['user']['id']; // PROVIDER SPECIFIC: Google returns the user's OAuth identity as id
+	$oauth_identity['email'] = $result_obj['user']['email'];
+	$oauth_identity['name'] = $result_obj['user']['name'];
+
 	//$oauth_identity['email'] = $result_obj['emails'][0]['value']; // PROVIDER SPECIFIC: Google returns an array of email addresses. To respect privacy we currently don't collect the user's email address.
 	if (!$oauth_identity['id']) {
 		WPOA::$login->end_login("Sorry, we couldn't log you in. User identity was not found. Please notify the admin or try again later.");
