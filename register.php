@@ -27,7 +27,7 @@ if ( ! get_option( 'users_can_register' ) ) {
 
 // Registration was initiated from an oauth provider, set the username and password automatically.
 if ( '' !== $_SESSION['WPOA']['USER_ID'] ) {
-	$username = $oauth_identity['email']; //uniqid( '', true );
+	$username = $oauth_identity['email'];
 	$password = wp_generate_password();
 }
 
@@ -58,7 +58,7 @@ if ( is_wp_error( $user_id ) ) {
 }
 
 // Now try to update the username to something more permanent and recognizable.
-$username = $oauth_identity['email']; // 'user' . $user_id;
+$username = $oauth_identity['email'];
 
 // phpcs:ignore WordPress.DB.DirectDatabaseQuery
 $update_username_result = $wpdb->update(
@@ -83,7 +83,6 @@ $update_role_result = wp_update_user(
 );
 
 // Proceed if no errors were detected.
-
 if ( false === $update_username_result ) { // || false === $update_nickname_result ) {
 	// There was an error during registration, redirect and notify the user.
 	$_SESSION['WPOA']['RESULT'] = 'Could not rename the username during registration. Please contact an admin or try again later.';
@@ -116,12 +115,9 @@ if ( false === $update_username_result ) { // || false === $update_nickname_resu
 		// wp_mail($username, "New User Registration", "Thank you for registering!\r\nYour username: " . $username . "\r\nYour password: " . $password, $headers);.
 		wp_new_user_notification( $user_id );
 	}
+
 	// Finally redirect the user back to the page they were on and notify them of successful registration.
-	// $_SESSION['WPOA']['RESULT'] = 'You have been registered successfully!';
-
-//	header( 'Location: ' . $_SESSION['WPOA']['LAST_URL'] );
-
-WPOA::$login->end_login( 'You have been registered successfully!' );
+	WPOA::$login->end_login( 'You have been registered successfully!' );
 
 	exit;
 }

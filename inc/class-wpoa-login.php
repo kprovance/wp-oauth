@@ -299,7 +299,6 @@ if ( ! class_exists( 'WPOA_Login' ) ) {
 			// handle the logged out user or no matching user (register the user).
 			if ( ! is_user_logged_in() && ! $matched_user ) {
 
-
 				// this person is not logged into a WordPress account and has no third party authentications registered, so proceed to register the WordPress user.
 				include WPOA::$dir . 'register.php';
 			}
@@ -319,19 +318,23 @@ if ( ! class_exists( 'WPOA_Login' ) ) {
 			// attempt to get a WordPress user id from the database that matches the $oauth_identity['id'] value.
 			global $wpdb;
 
+			if ( isset( $oauth_identity['email'] ) && '' !== $oauth_identity['email'] ) {
+				$user = get_user_by( 'email', $oauth_identity['email'] );
+
+				return $user;
+			}
+
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery
 			$query_result = $wpdb->get_var( $wpdb->prepare( "SELECT $wpdb->usermeta.user_id FROM $wpdb->usermeta WHERE $wpdb->usermeta.meta_key = 'wpoa_identity' AND $wpdb->usermeta.meta_value LIKE %s", '%' . $wpdb->esc_like( $oauth_identity['provider'] ) . '|' . $wpdb->esc_like( $oauth_identity['id'] ) . '%' ) );
 
 			// attempt to get a WordPress user with the matched id.
 			$user = get_user_by( 'id', $query_result );
 
-			
 			if ( false === $user ) {
 				if ( isset( $oauth_identity['email'] ) && '' !== $oauth_identity['email'] ) {
 					$user = get_user_by( 'email', $oauth_identity['email'] );
 				}
 			}
-
 
 			return $user;
 		}
