@@ -18,41 +18,6 @@ if ( ! class_exists( 'WPOA_Login' ) ) {
 	class WPOA_Login {
 
 		/**
-		 * WPOA_Login constructor.
-		 */
-		public function __construct() {
-			// restore default settings if necessary; this might get toggled by the admin or forced by a new version of the plugin.
-			if ( get_option( 'wpoa_logo_links_to_site' ) === '1' ) {
-				add_filter( 'login_headerurl', array( $this, 'logo_link' ) );
-			}
-
-			add_filter( 'login_message', array( $this, 'customize_login_screen' ) );
-		}
-
-		/**
-		 * Show a custom login form on the default login screen:
-		 */
-		public function customize_login_screen() {
-			$html   = '';
-			$design = get_option( 'wpoa_login_form_show_login_screen' );
-
-			if ( 'None' !== $design ) {
-				// TODO: we need to use $settings defaults here, not hard-coded defaults...
-				$html .= $this->login_form_content( $design, 'none', 'buttons-column', 'Connect with', 'center', 'conditional', 'conditional', 'Please login:', 'You are already logged in.', 'Logging in...', 'Logging out...' );
-			}
-			echo $html; // WPCS: XSS ok.
-		}
-
-		/**
-		 * Force the login screen logo to point to the site instead of wordpress.org:
-		 *
-		 * @return string|void
-		 */
-		public function logo_link() {
-			return get_bloginfo( 'url' );
-		}
-
-		/**
 		 * Gets the content to be used for displaying the login/logout form.
 		 *
 		 * @param string $design Design.
@@ -316,12 +281,6 @@ if ( ! class_exists( 'WPOA_Login' ) ) {
 		private function match_wordpress_user( $oauth_identity ) {
 			// attempt to get a WordPress user id from the database that matches the $oauth_identity['id'] value.
 			global $wpdb;
-
-			if ( isset( $oauth_identity['email'] ) && '' !== $oauth_identity['email'] ) {
-				$user = get_user_by( 'email', $oauth_identity['email'] );
-
-				return $user;
-			}
 
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery
 			$query_result = $wpdb->get_var( $wpdb->prepare( "SELECT $wpdb->usermeta.user_id FROM $wpdb->usermeta WHERE $wpdb->usermeta.meta_key = 'wpoa_identity' AND $wpdb->usermeta.meta_value LIKE %s", '%' . $wpdb->esc_like( $oauth_identity['provider'] ) . '|' . $wpdb->esc_like( $oauth_identity['id'] ) . '%' ) );

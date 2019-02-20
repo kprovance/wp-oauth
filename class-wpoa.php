@@ -174,6 +174,7 @@ if ( ! class_exists( 'WPOA' ) ) {
 			include_once self::$dir . 'inc/class-wpoa-user-profile.php';
 			include_once self::$dir . 'inc/class-wpoa-shortcodes.php';
 			include_once self::$dir . 'inc/class-wpoa-comments.php';
+			include_once self::$dir . 'inc/class-wpoa-login-design.php';
 		}
 
 		/**
