@@ -198,7 +198,7 @@ if ( ! class_exists( 'WPOA_Login' ) ) {
 				$redirect_to = '&redirect_to=' . $redirect_to;
 			}
 			// Get shortcode atts that determine how we should build these buttons.
-			$icon_set_path = plugins_url( 'assets/img/' . $icon_set . '/', __FILE__ );
+			$icon_set_path = WPOA::$url . 'assets/img/' . $icon_set . '/';
 
 			$atts = array(
 				'site_url'      => $site_url,
