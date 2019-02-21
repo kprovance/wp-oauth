@@ -100,7 +100,7 @@ if ( false === $update_username_result ) { // || false === $update_nickname_resu
 
 	// Registration was successful, the user account was created, proceed to login the user automatically...
 	// Associate the WordPress user account with the now-authenticated third party account.
-	WPOA::$login->link_account( $user_id );
+	WPOA::$login->link_account( $user_id, $oauth_identity );
 
 	// Attempt to login the new user (this could be error prone).
 	$creds                  = array();

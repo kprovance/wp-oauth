@@ -66,16 +66,16 @@ if ( ! class_exists( 'Redux_OAuth', false ) ) {
 				WPOA::$login->end_login( 'This third-party authentication provider has not been configured with an API key/secret. Please notify the admin or try again later.' );
 			} elseif ( isset( $_GET['error_description'] ) ) {
 				// do not proceed if an error was detected.
-				WPOA::$login->end_login( $_GET['error_description'] );
+				WPOA::$login->end_login( sanitize_text_field( wp_unslash( $_GET['error_description'] ) ) ); // WPCS: CSRF ok.
 			} elseif ( isset( $_GET['error_message'] ) ) {
 				// do not proceed if an error was detected.
-				WPOA::$login->end_login( $_GET['error_message'] );
-			} elseif ( isset( $_GET['code'] ) ) {
+				WPOA::$login->end_login( sanitize_text_field( wp_unslash( $_GET['error_message'] ) ) ); // WPCS: CSRF ok.
+			} elseif ( isset( $_GET['code'] ) ) { // WPCS: CSRF ok.
 				// post-auth phase, verify the state.
-				if ( $_SESSION['WPOA']['STATE'] === $_GET['state'] ) {
+				if ( isset( $_GET['state'] ) && $_GET['state'] === $_SESSION['WPOA']['STATE'] ) { // WPCS: CSRF ok.
 
 					// get an access token from the third party provider.
-					$this->get_oauth_token();
+					$this->get_oauth_token( sanitize_text_field( wp_unslash( $_GET['code'] ) ) ); // WPCS: CSRF ok.
 					// get the user's third-party identity and attempt to login/register a matching WordPress user account.
 					$oauth_identity = $this->get_oauth_identity( $this );
 					WPOA::$login->login_user( $oauth_identity );
@@ -92,7 +92,7 @@ if ( ! class_exists( 'Redux_OAuth', false ) ) {
 				}
 
 				$this->get_oauth_code();
-			}
+			} // WPCS: CSRF ok.
 
 			// we shouldn't be here, but just in case...
 			WPOA::$login->end_login( 'Sorry, we couldn\'t log you in. The authentication flow terminated in an unexpected way. Please notify the admin or try again later.' );
@@ -115,11 +115,12 @@ if ( ! class_exists( 'Redux_OAuth', false ) ) {
 			$this->config['client_secret']   = get_option( 'wpoa_' . $this->config['provider'] . '_api_secret' );
 			$this->config['redirect_uri']    = rtrim( site_url(), '/' ) . '/';
 			$this->config['util_verify_ssl'] = get_option( 'wpoa_http_util_verify_ssl' );
-			$_SESSION['WPOA']['PROVIDER']    = ucfirst( $this->config['provider'] );
+
+			$_SESSION['WPOA']['PROVIDER'] = ucfirst( $this->config['provider'] );
 
 			// Remember the user's last url so we can redirect them back to there after the login ends.
 			if ( ! $_SESSION['WPOA']['LAST_URL'] ) {
-				$_SESSION['WPOA']['LAST_URL'] = strtok( $_SERVER['HTTP_REFERER'], '?' );
+				$_SESSION['WPOA']['LAST_URL'] = isset( $_SERVER['HTTP_REFERER'] ) ? strtok( sanitize_text_field( wp_unslash( $_SERVER['HTTP_REFERER'] ) ), '?' ) : $this->config['redirect_uri'];
 			}
 		}
 
@@ -130,7 +131,7 @@ if ( ! class_exists( 'Redux_OAuth', false ) ) {
 		 *
 		 * @return Redux_oAuth|null
 		 */
-		public static function getInstance( $parent ) {
+		public static function instance( $parent ) {
 			if ( null === self::$instance ) {
 				self::$instance = new Redux_oAuth( $parent );
 			}
@@ -152,7 +153,7 @@ if ( ! class_exists( 'Redux_OAuth', false ) ) {
 				'redirect_uri'  => $this->config['redirect_uri'],
 			);
 
-			$_SESSION['WPOA']['STATE'] = $params['state'];
+			$_SESSION['WPOA']['STATE'] = sanitize_text_field( wp_unslash( $params['state'] ) );
 			$url                       = $this->config['url_auth'] . http_build_query( $params );
 
 			header( "Location: $url" );
@@ -161,7 +162,7 @@ if ( ! class_exists( 'Redux_OAuth', false ) ) {
 		}
 
 		/**
-		 * cURL
+		 * Function cURL.
 		 *
 		 * @param array  $params Params.
 		 * @param string $url URL.
@@ -222,20 +223,22 @@ if ( ! class_exists( 'Redux_OAuth', false ) ) {
 		/**
 		 * Get OAuth token.
 		 *
+		 * @param string $code Token.
+		 *
 		 * @return bool
 		 */
-		private function get_oauth_token() {
+		private function get_oauth_token( $code ) {
 			$params = array(
 				'grant_type'    => 'authorization_code',
 				'client_id'     => $this->config['client_id'],
 				'client_secret' => $this->config['client_secret'],
-				'code'          => $_GET[ $this->config['code'] ],
+				'code'          => $code,
 				'redirect_uri'  => $this->config['redirect_uri'],
 			);
 
 			$url = $this->config['url_token'];
 
-			$result_obj = $this->config['http_util'] == 'curl' ? $this->curl( $params, $url, true ) : $this->stream( $params, $url );
+			$result_obj = 'curl' === $this->config['http_util'] ? $this->curl( $params, $url, true ) : $this->stream( $params, $url );
 
 			if ( isset( $this->config['get_oauth_token']['json_decode'] ) && true === $this->config['get_oauth_token']['json_decode'] ) {
 				$result_obj = json_decode( $result_obj, true );
@@ -272,7 +275,7 @@ if ( ! class_exists( 'Redux_OAuth', false ) ) {
 		 *
 		 * @return array|mixed|object
 		 */
-		function get_oauth_identity() {
+		private function get_oauth_identity() {
 
 			// here we exchange the access token for the user info...
 			// set the access token param.
@@ -287,24 +290,9 @@ if ( ! class_exists( 'Redux_OAuth', false ) ) {
 			$oauth_identity             = $result_obj;
 			$oauth_identity['provider'] = $_SESSION['WPOA']['PROVIDER'];
 
-			//if ( isset( $this->config['get_oauth_identity']['id'] ) && isset( $oauth_identity[ $this->config['get_oauth_identity']['id'] ] ) ) {
-			//	if ( 'id' !== $oauth_identity[ $this->config['get_oauth_identity']['id'] ] ) {
-			//		$oauth_identity['id'] = $oauth_identity[ $this->config['get_oauth_identity']['id'] ];
-			//		unset( $oauth_identity[ $this->config['get_oauth_identity']['id'] ] );
-			//	}
-			//}
-
-			//if ( isset( $this->config['get_oauth_identity']['email'] ) && isset( $oauth_identity[ $this->config['get_oauth_identity']['email'] ] ) ) {
-			//	if ( 'email' !== $oauth_identity[ $this->config['get_oauth_identity']['email'] ] ) {
-			//		$oauth_identity['id'] = $oauth_identity[ $this->config['get_oauth_identity']['email'] ];
-			//		unset( $oauth_identity[ $this->config['get_oauth_identity']['email'] ] );
-			//	}
-			//}
-
 			if ( ! $oauth_identity['id'] ) {
 				WPOA::$login->end_login( 'Sorry, we couldn\'t log you in. User identity was not found. Please notify the admin or try again later.' );
 			}
-
 
 			return $oauth_identity;
 		}

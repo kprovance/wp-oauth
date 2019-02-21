@@ -254,7 +254,7 @@ if ( ! class_exists( 'WPOA_Login' ) ) {
 
 				wp_get_current_user();
 				$user_id = $current_user->ID;
-				$this->link_account( $user_id );
+				$this->link_account( $user_id, $oauth_identity );
 
 				// after linking the account, redirect user to their last url.
 				self::end_login( 'Your account was linked successfully with your third party authentication provider.' );
@@ -343,11 +343,12 @@ if ( ! class_exists( 'WPOA_Login' ) ) {
 		/**
 		 * Links a third-party account to an existing WordPress user account.
 		 *
-		 * @param mixed $user_id User ID.
+		 * @param string $user_id User ID.
+		 * @param array  $oauth_identity OAuth Identity.
 		 */
-		public function link_account( $user_id ) {
+		public function link_account( $user_id, $oauth_identity ) {
 			if ( '' !== $_SESSION['WPOA']['USER_ID'] ) {
-				add_user_meta( $user_id, 'wpoa_identity', $_SESSION['WPOA']['PROVIDER'] . '|' . $_SESSION['WPOA']['USER_ID'] . '|' . time() );
+				add_user_meta( $user_id, 'wpoa_identity', $_SESSION['WPOA']['PROVIDER'] . '|' . $_SESSION['WPOA']['USER_ID'] . '|' . time() . '|' . $oauth_identity['email'] . '|' . $oauth_identity['name'] );
 			}
 		}
 
