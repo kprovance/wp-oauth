@@ -76,14 +76,13 @@ if ( ! class_exists( 'Redux_OAuth', false ) ) {
 					// get an access token from the third party provider.
 					$this->get_oauth_token( sanitize_text_field( wp_unslash( $_GET['code'] ) ) ); // WPCS: CSRF ok.
 					// get the user's third-party identity and attempt to login/register a matching WordPress user account.
-					$login_callback = "WPOA_" . $this->config['provider'] . "_login";
+					$login_callback = "WPOA_" . $this->config['provider'] . "_get_oauth_identity";
 					if ( has_action( $login_callback ) ) {
-						do_action( $login_callback, $this );
 						$oauth_identity = apply_filters( $login_callback, $this );
 					} else {
 						$oauth_identity = $this->get_oauth_identity();
 					}
-					if ( ! $oauth_identity['id'] ) {
+					if ( ! isset( $oauth_identity['id'] ) ) {
 						WPOA::$login->end_login( 'Sorry, we couldn\'t log you in. User identity was not found. Please notify the admin or try again later.' );
 					}
 					WPOA::$login->login_user( $oauth_identity );
