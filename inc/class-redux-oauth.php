@@ -71,15 +71,19 @@ if ( ! class_exists( 'Redux_OAuth', false ) ) {
 				// do not proceed if an error was detected.
 				WPOA::$login->end_login( sanitize_text_field( wp_unslash( $_GET['error_message'] ) ) ); // WPCS: CSRF ok.
 			} elseif ( isset( $_GET['code'] ) ) { // WPCS: CSRF ok.
-
 				// post-auth phase, verify the state.
 				if ( isset( $_GET['state'] ) && $_GET['state'] === $_SESSION['WPOA']['STATE'] ) { // WPCS: CSRF ok.
-
 					// get an access token from the third party provider.
 					$this->get_oauth_token( sanitize_text_field( wp_unslash( $_GET['code'] ) ) ); // WPCS: CSRF ok.
 					// get the user's third-party identity and attempt to login/register a matching WordPress user account.
 					$oauth_identity = $this->get_oauth_identity( $this );
-					WPOA::$login->login_user( $oauth_identity );
+					$login_callback = "WPOA_" . $this->config['provider'] . "_login";
+//echo $login_callback; exit();
+					if ( has_action( $login_callback ) ) {
+						do_action( $login_callback, $this, $oauth_identity );
+					} else {
+						WPOA::$login->login_user( $oauth_identity );
+					}
 				} else {
 					// possible CSRF attack, end the login with a generic message to the user and a detailed message to the admin/logs in case of abuse:
 					// TODO: report detailed message to admin/logs here...
@@ -173,6 +177,18 @@ if ( ! class_exists( 'Redux_OAuth', false ) ) {
 		 */
 		private function curl( $params, $url, $post = false ) {
 			$curl       = curl_init();
+
+			if ( isset( $this->config['authorization_header'] ) && isset( $params['access_token'] ) ) {
+				$headr = array();
+//				$headr[] = 'Content-length: 0';
+//				$headr[] = 'Content-type: application/json';
+				$headr[] = 'Authorization: Bearer ' . $params['access_token'];
+				//print_r($headr);
+                                curl_setopt( $ch, CURLOPT_HTTPHEADER, $headr );
+				unset( $params['access_token'] );
+				//echo $url;
+				//print_r($params);
+                        }
 			if ( is_array( $params ) && count( $params  ) ) {
 				$url_params = http_build_query( $params );
 				$url = $url . $url_params;
@@ -277,7 +293,7 @@ if ( ! class_exists( 'Redux_OAuth', false ) ) {
 		/**
 		 * Get OAuth identity.
 		 *
-		 * @return array|mixed|object
+ 		 * @return array|mixed|object
 		 */
 		private function get_oauth_identity() {
 
@@ -286,12 +302,14 @@ if ( ! class_exists( 'Redux_OAuth', false ) ) {
 			$params                 = $this->config['get_oauth_identity']['params'];
 			$params['access_token'] = $_SESSION['WPOA']['ACCESS_TOKEN'];
 			$url        = $this->config['url_user'];
+//			echo $url;
+//			print_r($params);
 			$result_obj = 'curl' === $this->config['http_util'] ? $this->curl( $params, $url ) : $this->stream( $params, $url );
 			$result_obj = json_decode( $result_obj, true );
 			// parse and return the user's oauth identity.
 			$oauth_identity             = $result_obj;
 			$oauth_identity['provider'] = $_SESSION['WPOA']['PROVIDER'];
-
+			//print_r($oauth_identity);exit();
 			if ( ! $oauth_identity['id'] ) {
 				WPOA::$login->end_login( 'Sorry, we couldn\'t log you in. User identity was not found. Please notify the admin or try again later.' );
 			}
@@ -300,3 +318,4 @@ if ( ! class_exists( 'Redux_OAuth', false ) ) {
 		}
 	}
 }
+
