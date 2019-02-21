@@ -216,7 +216,7 @@ if ( ! class_exists( 'WPOA_Login' ) ) {
 			$html = '';
 
 			if ( get_option( 'wpoa_' . $provider . '_api_enabled' ) ) {
-				$html .= "<a id='wpoa-login-" . $provider . "' class='wpoa-login-button" . $disabled . ' ' . $query_result . "' href='" . $atts['site_url'] . '?connect=' . $provider . $atts['redirect_to'] . "'>";
+				$html .= "<a id='wpoa-login-" . $provider . "' class='wpoa-login-button" . $disabled . " " . $query_result . "' href='" . $atts['site_url'] . '?connect=' . $provider . $atts['redirect_to'] . "'>";
 
 				if ( 'none' !== $atts['icon_set'] ) {
 					$html .= "<img src='" . $atts['icon_set_path'] . $provider . ".png' alt='" . $display_name . "' class='icon'></img>";
@@ -235,6 +235,7 @@ if ( ! class_exists( 'WPOA_Login' ) ) {
 		 * @param array $oauth_identity ID.
 		 */
 		public function login_user( $oauth_identity ) {
+
 			// Store the user info in the user session so we can grab it later if we need to register the user.
 			$_SESSION['WPOA']['USER_ID'] = $oauth_identity['id'];
 
@@ -297,11 +298,11 @@ if ( ! class_exists( 'WPOA_Login' ) ) {
 			// attempt to get a WordPress user with the matched id.
 			$user = get_user_by( 'id', $query_result );
 
-			if ( false === $user ) {
-				if ( isset( $oauth_identity['email'] ) && '' !== $oauth_identity['email'] ) {
-					$user = get_user_by( 'email', $oauth_identity['email'] );
-				}
-			}
+			//if ( false === $user ) {
+			//	if ( isset( $oauth_identity['email'] ) && '' !== $oauth_identity['email'] ) {
+			//		$user = get_user_by( 'email', $oauth_identity['email'] );
+			//	}
+			//}
 
 			return $user;
 		}
