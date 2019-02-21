@@ -60,3 +60,5 @@ function envato_get_oauth_identity( $e ) {
 	return $oauth_identity;
 }
 add_filter('WPOA_envato_get_oauth_identity', 'envato_get_oauth_identity');
+
+$oauth->auth_flow();
