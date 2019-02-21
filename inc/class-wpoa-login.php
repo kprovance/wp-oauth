@@ -264,7 +264,7 @@ if ( ! class_exists( 'WPOA_Login' ) ) {
 			if ( ! is_user_logged_in() && ! $matched_user ) {
 
 				// this person is not logged into a WordPress account and has no third party authentications registered, so proceed to register the WordPress user.
-				include WPOA::$dir . 'register.php';
+				include WPOA::$dir . 'inc/wpoa-register.php';
 			}
 
 			// we shouldn't be here, but just in case...
