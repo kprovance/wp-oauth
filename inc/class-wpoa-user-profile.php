@@ -58,12 +58,10 @@ if ( ! class_exists( 'WPOA_User_Profile' ) ) {
 				$oauth_provider      = $wpoa_identity_parts[0];
 				$oauth_id            = $wpoa_identity_parts[1]; // keep this private, don't send to client.
 				$time_linked         = $wpoa_identity_parts[2];
-				$linked_email        = isset( $wpoa_identity_parts[3] ) ? $wpoa_identity_parts[3] : '';
-				$linked_name         = isset( $wpoa_identity_parts[4] ) ? '(' . $wpoa_identity_parts[4] . ')' : '';
 				$local_time          = strtotime( '-' . sanitize_text_field( wp_unslash( $_COOKIE['gmtoffset'] ) ) . ' hours', $time_linked ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
 				$nonce               = wp_create_nonce( 'wpoa-unlink-nonce' );
 
-				echo '<div>' . esc_html( $oauth_provider ) . ' as ' . esc_html( $linked_email ) . esc_html( $linked_name ) . ' on ' . esc_html( date( 'F d, Y h:i A', $local_time ) ) . ' <a class="wpoa-unlink-account" data-nonce="' . esc_attr( $nonce ) . '" data-wpoa-identity-row="' . esc_attr( $wpoa_row->umeta_id ) . '" href="#">Unlink</a></div>';
+				echo '<div>' . esc_html( $oauth_provider ) . 'as ' . esc_html( $linked_email ) . esc_html( $linked_name ) . ' on ' . esc_html( date( 'F d, Y h:i A', $local_time ) ) . ' <a class="wpoa-unlink-account" data-nonce="' . esc_attr( $nonce ) . '" data-wpoa-identity-row="' . esc_attr( $wpoa_row->umeta_id ) . '" href="#">Unlink</a></div>';
 			}
 
 			echo '</div>';
