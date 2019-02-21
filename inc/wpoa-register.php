@@ -28,6 +28,15 @@ if ( ! get_option( 'users_can_register' ) ) {
 // Registration was initiated from an oauth provider, set the username and password automatically.
 if ( '' !== $_SESSION['WPOA']['USER_ID'] ) {
 	$username = $oauth_identity['email'];
+
+	if ( '' === $username ) {
+		$username = str_replace( ' ', '', $oauth_identity['name'] );
+	}
+
+	if ( '' === $username ) {
+		$username = $oauth_identity['provider'] . '_User_' . uniqid( 'redux' );
+	}
+
 	$password = wp_generate_password();
 }
 
@@ -57,21 +66,18 @@ if ( is_wp_error( $user_id ) ) {
 	exit;
 }
 
-// Now try to update the username to something more permanent and recognizable.
-$username = $oauth_identity['email'];
-
 // phpcs:ignore WordPress.DB.DirectDatabaseQuery
 $update_username_result = $wpdb->update(
 	$wpdb->users,
 	array(
 		'user_login'    => $username,
 		'user_nicename' => $username,
-		'display_name'  => $username,
+		'display_name'  => isset( $oauth_identity['name'] ) ? $oauth_identity['name'] : $username,
 	),
 	array( 'ID' => $user_id )
 );
 
-$update_nickname_result = update_user_meta( $user_id, 'nickname', $username );
+$update_nickname_result = update_user_meta( $user_id, 'nickname', isset( $oauth_identity['name'] ) ? $oauth_identity['name'] : $username );
 
 // Apply the custom default user role.
 $user_role          = get_option( 'wpoa_new_user_role' );
