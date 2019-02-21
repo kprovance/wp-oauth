@@ -79,10 +79,15 @@ if ( ! class_exists( 'Redux_OAuth', false ) ) {
 					$login_callback = "WPOA_" . $this->config['provider'] . "_login";
 					if ( has_action( $login_callback ) ) {
 						do_action( $login_callback, $this );
+						$oauth_identity = apply_filters( $login_callback, $this );
 					} else {
 						$oauth_identity = $this->get_oauth_identity();
-						WPOA::$login->login_user( $oauth_identity );
 					}
+					if ( ! $oauth_identity['id'] ) {
+						WPOA::$login->end_login( 'Sorry, we couldn\'t log you in. User identity was not found. Please notify the admin or try again later.' );
+					}
+					WPOA::$login->login_user( $oauth_identity );
+
 				} else {
 					// possible CSRF attack, end the login with a generic message to the user and a detailed message to the admin/logs in case of abuse:
 					// TODO: report detailed message to admin/logs here...
@@ -304,10 +309,6 @@ if ( ! class_exists( 'Redux_OAuth', false ) ) {
 			// parse and return the user's oauth identity.
 			$oauth_identity             = $result_obj;
 			$oauth_identity['provider'] = $_SESSION['WPOA']['PROVIDER'];
-
-			if ( ! $oauth_identity['id'] ) {
-				WPOA::$login->end_login( 'Sorry, we couldn\'t log you in. User identity was not found. Please notify the admin or try again later.' );
-			}
 
 			return $oauth_identity;
 		}
