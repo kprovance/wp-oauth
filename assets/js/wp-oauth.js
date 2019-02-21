@@ -369,8 +369,8 @@
 						url: wpoa_cvars.ajaxurl,
 						data: post_data,
 						success: function( json_response ) {
-
 							var oresponse = JSON.parse( json_response );
+							var linkButton;
 
 							if ( 1 === oresponse.result ) {
 								btn.parent().fadeOut(
@@ -379,6 +379,12 @@
 										btn.parent().remove();
 									}
 								);
+
+								linkButton = $( '.wpoa-login-button.' + wpoa_identity_row );
+
+								if ( linkButton.hasClass( 'disabled' ) ) {
+									linkButton.removeClass( 'disabled' )
+								}
 							}
 						}
 					}

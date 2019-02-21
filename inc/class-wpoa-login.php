@@ -209,14 +209,14 @@ if ( ! class_exists( 'WPOA_Login' ) ) {
 			$query_result = $wpdb->get_var( $wpdb->prepare( "SELECT $wpdb->usermeta.umeta_id FROM $wpdb->usermeta WHERE %d = $wpdb->usermeta.user_id AND $wpdb->usermeta.meta_key = 'wpoa_identity' AND $wpdb->usermeta.meta_value LIKE %s", $user_id, '%' . $provider . '%' ) );
 
 			$disabled = '';
-			if ( '' !== $query_result ) {
+			if ( ! empty( $query_result ) ) {
 				$disabled = ' disabled';
 			}
 
 			$html = '';
 
 			if ( get_option( 'wpoa_' . $provider . '_api_enabled' ) ) {
-				$html .= "<a id='wpoa-login-" . $provider . "' class='wpoa-login-button" . $disabled . "' href='" . $atts['site_url'] . '?connect=' . $provider . $atts['redirect_to'] . "'>";
+				$html .= "<a id='wpoa-login-" . $provider . "' class='wpoa-login-button" . $disabled . " " . $query_result . "' href='" . $atts['site_url'] . '?connect=' . $provider . $atts['redirect_to'] . "'>";
 
 				if ( 'none' !== $atts['icon_set'] ) {
 					$html .= "<img src='" . $atts['icon_set_path'] . $provider . ".png' alt='" . $display_name . "' class='icon'></img>";
