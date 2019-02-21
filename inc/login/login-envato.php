@@ -31,12 +31,34 @@ $oauth->set_config(
 );
 
 // We need extra calls to construct the identitity
-function envato_login($e, $oauth_identity) {
-	print_r($oauth_identity);
-	echo "did it!";
-	exit();
+function envato_get_oauth_identity( $e ) {
+	$params['access_token'] = $_SESSION['WPOA']['ACCESS_TOKEN'];
+	$url = $e->config['url_user'];
+	$oauth_identity = array();
+
+	# Fetch the profile
+	$result_obj = 'curl' === $e->config['http_util'] ? $e->curl( $params, $url ) : $e->stream( $params, $url );
+	$result_obj = json_decode( $result_obj, true );
+	$oauth_identity['name'] = $result_obj['account']['firstname'] . " " . $result_obj['account']['surname'];
+	$oauth_identity['image'] = $result_obj['account']['image'];
+	$oauth_identity['country'] = $result_obj['account']['country'];
+
+	# Fetch the username
+	$url = "https://api.envato.com/v1/market/private/user/username.json";
+	$result_obj = 'curl' === $e->config['http_util'] ? $e->curl( $params, $url ) : $e->stream( $params, $url );
+	$result_obj = json_decode( $result_obj, true );
+	$oauth_identity['id'] = $result_obj['username'];
+
+	# Fetch the email
+	$url = "https://api.envato.com/v1/market/private/user/email.json";
+	$result_obj = 'curl' === $e->config['http_util'] ? $e->curl( $params, $url ) : $e->stream( $params, $url );
+	$result_obj = json_decode( $result_obj, true );
+	$oauth_identity['email'] = $result_obj['email'];
+
+	$oauth_identity['provider'] = $_SESSION['WPOA']['PROVIDER'];
+
+	return $oauth_identity;
 }
-add_action('WPOA_envato_login', 'envato_login');
+add_filter('WPOA_envato_get_oauth_identity', 'envato_get_oauth_identity');
 
 $oauth->auth_flow();
-
