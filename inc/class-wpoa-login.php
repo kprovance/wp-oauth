@@ -217,7 +217,7 @@ if ( ! class_exists( 'WPOA_Login' ) ) {
 			$html = '';
 
 			if ( get_option( 'wpoa_' . $provider . '_api_enabled' ) ) {
-				$html .= "<a id='wpoa-login-" . $provider . "' class='wpoa-login-button" . $disabled . " " . $query_result . "' href='" . $atts['site_url'] . '?connect=' . $provider . $atts['redirect_to'] . "'>";
+				$html .= "<a id='wpoa-login-" . $provider . "' class='wpoa-login-button" . $disabled . ' ' . $query_result . "' href='" . $atts['site_url'] . '?connect=' . $provider . $atts['redirect_to'] . "'>";
 
 				if ( 'none' !== $atts['icon_set'] ) {
 					$html .= "<img src='" . $atts['icon_set_path'] . $provider . ".png' alt='" . $display_name . "' class='icon'></img>";
@@ -228,6 +228,22 @@ if ( ! class_exists( 'WPOA_Login' ) ) {
 			}
 
 			return $html;
+		}
+
+		/**
+		 * Initiate login into WordPress.
+		 *
+		 * @param object $user WP_User.
+		 */
+		private function initiate_login( $user ) {
+			// there was a matching WordPress user account, log it in now.
+			$user_id    = $user->ID;
+			$user_login = $user->user_login;
+
+			wp_set_current_user( $user_id, $user_login );
+			wp_set_auth_cookie( $user_id );
+
+			do_action( 'wp_login', $user_login, $user );
 		}
 
 		/**
@@ -245,19 +261,7 @@ if ( ! class_exists( 'WPOA_Login' ) ) {
 
 			// handle the matched user if there is one.
 			if ( $matched_user ) {
-
-				if ( ! $matched_user && ! is_user_logged_in() ){
-
-				}
-
-				// there was a matching WordPress user account, log it in now.
-				$user_id    = $matched_user->ID;
-				$user_login = $matched_user->user_login;
-
-				wp_set_current_user( $user_id, $user_login );
-				wp_set_auth_cookie( $user_id );
-
-				do_action( 'wp_login', $user_login, $matched_user );
+				$this->initiate_login( $matched_user );
 
 				// after login, redirect to the user's last location.
 				self::end_login( 'Logged in successfully!' );
@@ -280,8 +284,18 @@ if ( ! class_exists( 'WPOA_Login' ) ) {
 			// handle the logged out user or no matching user (register the user).
 			if ( ! is_user_logged_in() && ! $matched_user ) {
 
-				// this person is not logged into a WordPress account and has no third party authentications registered, so proceed to register the WordPress user.
-				include WPOA::$dir . 'inc/wpoa-register.php';
+				$matched_user = $this->match_wordpress_user_email( $oauth_identity );
+
+				if ( $matched_user ) {
+					$this->initiate_login( $matched_user );
+
+					// after login, redirect to the user's last location.
+					self::end_login( 'Logged in successfully!' );
+				} else {
+
+					// this person is not logged into a WordPress account and has no third party authentications registered, so proceed to register the WordPress user.
+					include WPOA::$dir . 'inc/wpoa-register.php';
+				}
 			}
 
 			// we shouldn't be here, but just in case...
