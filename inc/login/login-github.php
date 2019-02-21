@@ -43,6 +43,7 @@ elseif (isset($_GET['code'])) {
 		get_oauth_token($this);
 		// get the user's third-party identity and attempt to login/register a matching wordpress user account:
 		$oauth_identity = get_oauth_identity($this);
+
 		WPOA::$login->login_user($oauth_identity);
 	}
 	else {

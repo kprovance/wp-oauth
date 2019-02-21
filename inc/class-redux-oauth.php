@@ -71,6 +71,7 @@ if ( ! class_exists( 'Redux_OAuth', false ) ) {
 				// do not proceed if an error was detected.
 				WPOA::$login->end_login( sanitize_text_field( wp_unslash( $_GET['error_message'] ) ) ); // WPCS: CSRF ok.
 			} elseif ( isset( $_GET['code'] ) ) { // WPCS: CSRF ok.
+
 				// post-auth phase, verify the state.
 				if ( isset( $_GET['state'] ) && $_GET['state'] === $_SESSION['WPOA']['STATE'] ) { // WPCS: CSRF ok.
 
