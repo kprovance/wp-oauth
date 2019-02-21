@@ -245,11 +245,17 @@ if ( ! class_exists( 'WPOA_Login' ) ) {
 			// handle the matched user if there is one.
 			if ( $matched_user ) {
 
+				if ( ! $matched_user && ! is_user_logged_in() ){
+
+				}
+
 				// there was a matching WordPress user account, log it in now.
 				$user_id    = $matched_user->ID;
 				$user_login = $matched_user->user_login;
+
 				wp_set_current_user( $user_id, $user_login );
 				wp_set_auth_cookie( $user_id );
+
 				do_action( 'wp_login', $user_login, $matched_user );
 
 				// after login, redirect to the user's last location.
@@ -282,6 +288,21 @@ if ( ! class_exists( 'WPOA_Login' ) ) {
 		}
 
 		/**
+		 * Match the oauth identity to an existing WordPress user account by email.
+		 *
+		 * @param array $oauth_identity ID.
+		 *
+		 * @return bool|WP_User
+		 */
+		private function match_wordpress_user_email( $oauth_identity ) {
+			if ( isset( $oauth_identity['email'] ) && '' !== $oauth_identity['email'] ) {
+				$user = get_user_by( 'email', $oauth_identity['email'] );
+			}
+
+			return $user;
+		}
+
+		/**
 		 * Match the oauth identity to an existing WordPress user account.
 		 *
 		 * @param array $oauth_identity ID.
@@ -297,12 +318,6 @@ if ( ! class_exists( 'WPOA_Login' ) ) {
 
 			// attempt to get a WordPress user with the matched id.
 			$user = get_user_by( 'id', $query_result );
-
-			//if ( false === $user ) {
-			//	if ( isset( $oauth_identity['email'] ) && '' !== $oauth_identity['email'] ) {
-			//		$user = get_user_by( 'email', $oauth_identity['email'] );
-			//	}
-			//}
 
 			return $user;
 		}
