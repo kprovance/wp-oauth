@@ -3,9 +3,9 @@
 ( function( $ ) {
 	'use strict';
 
-	var timeout_idle_time = 0;
-	var wp_media_dialog_field; // Field to populate after the admin selects an image using the wordpress media dialog.
-	var timeout_interval;
+	var timeoutIdleTime = 0;
+	var wpMediaDialogField; // Field to populate after the admin selects an image using the wordpress media dialog.
+	var timeoutInterval;
 	var msg;
 
 	window.wpoa = window.wpoa || {};
@@ -43,12 +43,12 @@
 		// Automatically show warning tips when the user enters a sensitive form field.
 		$( '.wpoa-settings input, .wpoa-settings select' ).focus(
 			function( e ) {
-				var tip_warning = $( this ).parents( '.has-tip' ).find( '.tip-warning, .tip-info' );
+				var tipWarning = $( this ).parents( '.has-tip' ).find( '.tip-warning, .tip-info' );
 
 				e.preventDefault();
 
-				if ( tip_warning.length > 0 ) {
-					tip_warning.fadeIn();
+				if ( tipWarning.length > 0 ) {
+					tipWarning.fadeIn();
 					$( this ).parents( '.has-tip' ).find( '.tip-message' ).fadeIn();
 				}
 			}
@@ -99,20 +99,20 @@
 		// Edit design button.
 		$( '#wpoa-login-form-edit' ).click(
 			function() {
-				var design_name  = $( '#wpoa-login-form-design :selected' ).text();
-				var form_designs = $( '[name=wpoa_login_form_designs]' ).val();
+				var designName = $( '#wpoa-login-form-design :selected' ).text();
+				var formDesign = $( '[name=wpoa_login_formDesign]' ).val();
 				var designs;
 				var design;
 
-				form_designs = decodeURIComponent( form_designs );
-				designs      = JSON.parse( form_designs );
-				design       = designs[design_name];
+				formDesign = decodeURIComponent( formDesign );
+				designs    = JSON.parse( formDesign );
+				design     = designs[designName];
 
 				if ( design ) {
 
 					// Pull the design into the form fields for editing.
 					// TODO: don't hard code these, we want to add new fields in the future without having to update this function...
-					$( '[name=wpoa_login_form_design_name]' ).val( design_name );
+					$( '[name=wpoa_login_form_designName]' ).val( designName );
 					$( '[name=wpoa_login_form_icon_set]' ).val( design.icon_set );
 					$( '[name=wpoa_login_form_show_login]' ).val( design.show_login );
 					$( '[name=wpoa_login_form_show_logout]' ).val( design.show_logout );
@@ -120,8 +120,8 @@
 					$( '[name=wpoa_login_form_button_prefix]' ).val( design.button_prefix );
 					$( '[name=wpoa_login_form_logged_out_title]' ).val( design.logged_out_title );
 					$( '[name=wpoa_login_form_logged_in_title]' ).val( design.logged_in_title );
-					$( '[name=wpoa_login_form_logging_in_title]' ).val( design.logging_in_title );
-					$( '[name=wpoa_login_form_logging_out_title]' ).val( design.logging_out_title );
+					$( '[name=wpoa_login_form_loggingInTitle]' ).val( design.loggingInTitle );
+					$( '[name=wpoa_login_form_loggingOutTitle]' ).val( design.loggingOutTitle );
 
 					// Show the edit design sub-section and hide the design selector.
 					$( '#wpoa-login-form-design' ).parents( 'tr' ).hide();
@@ -136,22 +136,22 @@
 		$( '#wpoa-login-form-delete' ).click(
 			function() {
 				var designs;
-				var old_design_name;
+				var oldDesignName;
 
 				// Get the designs.
-				var form_designs = $( '[name=wpoa_login_form_designs]' ).val();
+				var formDesign = $( '[name=wpoa_login_formDesign]' ).val();
 
-				form_designs = decodeURIComponent( form_designs );
-				designs      = JSON.parse( form_designs );
+				formDesign = decodeURIComponent( formDesign );
+				designs    = JSON.parse( formDesign );
 
 				// Get the old design name (the design we'll be deleting).
-				old_design_name = $( '#wpoa-login-form-design :selected' ).text();
+				oldDesignName = $( '#wpoa-login-form-design :selected' ).text();
 
-				$( '#wpoa-login-form-design option:contains("' + old_design_name + '")' ).remove();
-				delete designs[old_design_name];
+				$( '#wpoa-login-form-design option:contains("' + oldDesignName + '")' ).remove();
+				delete designs[oldDesignName];
 
 				// Update the designs array for POST.
-				$( '[name=wpoa_login_form_designs]' ).val( encodeURIComponent( JSON.stringify( designs ) ) );
+				$( '[name=wpoa_login_formDesign]' ).val( encodeURIComponent( JSON.stringify( designs ) ) );
 			}
 		);
 
@@ -161,19 +161,19 @@
 
 				// Applies changes to the current design by updating the designs array stored as JSON in a hidden form field...
 				// Get the design name being proposed.
-				var new_design_name    = $( '[name=wpoa_login_form_design_name]' ).val();
-				var validation_warning = '';
-				var form_designs;
+				var new_designName    = $( '[name=wpoa_login_form_designName]' ).val();
+				var validationWarning = '';
+				var formDesign;
 				var designs;
-				var old_design_name;
+				var oldDesignName;
 
 				// Remove any validation error from a previous failed attempt.
 				$( '#wpoa-login-form-design-form .validation-warning' ).remove();
 
 				// Make sure the design name is not empty.
 				if ( ! $( '#wpoa-login-form-design-name' ).val() ) {
-					validation_warning = '<p id="validation-warning" class="validation-warning">Design name cannot be empty.</span>';
-					$( '#wpoa-login-form-design-name' ).parent().append( validation_warning );
+					validationWarning = '<p id="validation-warning" class="validation-warning">Design name cannot be empty.</span>';
+					$( '#wpoa-login-form-design-name' ).parent().append( validationWarning );
 
 					return;
 				}
@@ -183,49 +183,49 @@
 
 					// NEW DESIGN, add it...
 					// Make sure the design name doesn't already exist.
-					if ( -1 !== $( '#wpoa-login-form-design option' ).text().indexOf( new_design_name ) ) {
+					if ( -1 !== $( '#wpoa-login-form-design option' ).text().indexOf( new_designName ) ) {
 
 						// Design name already exists, notify the user and abort.
-						validation_warning = '<p id="validation-warning" class="validation-warning">Design name already exists! Please choose a different name.</span>';
-						$( '#wpoa-login-form-design-name' ).parent().append( validation_warning );
+						validationWarning = '<p id="validation-warning" class="validation-warning">Design name already exists! Please choose a different name.</span>';
+						$( '#wpoa-login-form-design-name' ).parent().append( validationWarning );
 
 						return;
 					} else {
 
 						// Get the designs array which contains all of our designs.
-						form_designs = $( '[name=wpoa_login_form_designs]' ).val();
-						form_designs = decodeURIComponent( form_designs );
-						designs      = JSON.parse( form_designs );
+						formDesign = $( '[name=wpoa_login_formDesign]' ).val();
+						formDesign = decodeURIComponent( formDesign );
+						designs    = JSON.parse( formDesign );
 
 						// Add a design to the designs array.
 						// TODO: don't hard code these, we want to add new fields in the future without having to update this function...
-						designs[new_design_name]                  = {};
-						designs[new_design_name].icon_set         = $( '[name=wpoa_login_form_icon_set]' ).val();
-						designs[new_design_name].show_login       = $( '[name=wpoa_login_form_show_login]' ).val();
-						designs[new_design_name].show_logout      = $( '[name=wpoa_login_form_show_logout]' ).val();
-						designs[new_design_name].layout           = $( '[name=wpoa_login_form_layout]' ).val();
-						designs[new_design_name].button_prefix    = $( '[name=wpoa_login_form_button_prefix]' ).val();
-						designs[new_design_name].logged_out_title = $(
+						designs[new_designName]                  = {};
+						designs[new_designName].icon_set         = $( '[name=wpoa_login_form_icon_set]' ).val();
+						designs[new_designName].show_login       = $( '[name=wpoa_login_form_show_login]' ).val();
+						designs[new_designName].show_logout      = $( '[name=wpoa_login_form_show_logout]' ).val();
+						designs[new_designName].layout           = $( '[name=wpoa_login_form_layout]' ).val();
+						designs[new_designName].button_prefix    = $( '[name=wpoa_login_form_button_prefix]' ).val();
+						designs[new_designName].logged_out_title = $(
 							'[name=wpoa_login_form_logged_out_title]'
 						).val();
 
-						designs[new_design_name].logged_in_title  = $( '[name=wpoa_login_form_logged_in_title]' ).val();
-						designs[new_design_name].logging_in_title = $(
-							'[name=wpoa_login_form_logging_in_title]'
+						designs[new_designName].logged_in_title = $( '[name=wpoa_login_form_logged_in_title]' ).val();
+						designs[new_designName].loggingInTitle  = $(
+							'[name=wpoa_login_form_loggingInTitle]'
 						).val();
 
-						designs[new_design_name].logging_out_title = $(
-							'[name=wpoa_login_form_logging_out_title]'
+						designs[new_designName].loggingOutTitle = $(
+							'[name=wpoa_login_form_loggingOutTitle]'
 						).val();
 
 						// Update the select box to include this new design.
 						$( '#wpoa-login-form-design' ).append(
-							$( '<option></option>' ).text( new_design_name ).attr( 'selected', 'selected' )
+							$( '<option></option>' ).text( new_designName ).attr( 'selected', 'selected' )
 						);
 
 						// Select the design in the selector.
 						// update the designs array for POST.
-						$( '[name=wpoa_login_form_designs]' ).val( encodeURIComponent( JSON.stringify( designs ) ) );
+						$( '[name=wpoa_login_formDesign]' ).val( encodeURIComponent( JSON.stringify( designs ) ) );
 
 						// Hide the design editor and show the select box.
 						$( '#wpoa-login-form-design' ).parents( 'tr' ).show();
@@ -235,36 +235,36 @@
 
 					// MODIFIED DESIGN, add it and remove the old one...
 					// Get the designs array which contains all of our designs.
-					form_designs = $( '[name=wpoa_login_form_designs]' ).val();
-					form_designs = decodeURIComponent( form_designs );
-					designs      = JSON.parse( form_designs );
+					formDesign = $( '[name=wpoa_login_formDesign]' ).val();
+					formDesign = decodeURIComponent( formDesign );
+					designs    = JSON.parse( formDesign );
 
 					// Remove the old design.
-					old_design_name = $( '#wpoa-login-form-design :selected' ).text();
-					$( '#wpoa-login-form-design option:contains("' + old_design_name + '")' ).remove();
+					oldDesignName = $( '#wpoa-login-form-design :selected' ).text();
+					$( '#wpoa-login-form-design option:contains("' + oldDesignName + '")' ).remove();
 
-					delete designs[old_design_name];
+					delete designs[oldDesignName];
 
 					// Add the modified design.
 					// TODO: don't hard code these, we want to add new fields in the future without having to update this function...
-					designs[new_design_name]                   = {};
-					designs[new_design_name].icon_set          = $( '[name=wpoa_login_form_icon_set]' ).val();
-					designs[new_design_name].show_login        = $( '[name=wpoa_login_form_show_login]' ).val();
-					designs[new_design_name].show_logout       = $( '[name=wpoa_login_form_show_logout]' ).val();
-					designs[new_design_name].layout            = $( '[name=wpoa_login_form_layout]' ).val();
-					designs[new_design_name].button_prefix     = $( '[name=wpoa_login_form_button_prefix]' ).val();
-					designs[new_design_name].logged_out_title  = $( '[name=wpoa_login_form_logged_out_title]' ).val();
-					designs[new_design_name].logged_in_title   = $( '[name=wpoa_login_form_logged_in_title]' ).val();
-					designs[new_design_name].logging_in_title  = $( '[name=wpoa_login_form_logging_in_title]' ).val();
-					designs[new_design_name].logging_out_title = $( '[name=wpoa_login_form_logging_out_title]' ).val();
+					designs[new_designName]                  = {};
+					designs[new_designName].icon_set         = $( '[name=wpoa_login_form_icon_set]' ).val();
+					designs[new_designName].show_login       = $( '[name=wpoa_login_form_show_login]' ).val();
+					designs[new_designName].show_logout      = $( '[name=wpoa_login_form_show_logout]' ).val();
+					designs[new_designName].layout           = $( '[name=wpoa_login_form_layout]' ).val();
+					designs[new_designName].button_prefix    = $( '[name=wpoa_login_form_button_prefix]' ).val();
+					designs[new_designName].logged_out_title = $( '[name=wpoa_login_form_logged_out_title]' ).val();
+					designs[new_designName].logged_in_title  = $( '[name=wpoa_login_form_logged_in_title]' ).val();
+					designs[new_designName].loggingInTitle   = $( '[name=wpoa_login_form_loggingInTitle]' ).val();
+					designs[new_designName].loggingOutTitle  = $( '[name=wpoa_login_form_loggingOutTitle]' ).val();
 
 					// Update the select box to include this new design.
 					$( '#wpoa-login-form-design' ).append(
-						$( '<option></option>' ).text( new_design_name ).attr( 'selected', 'selected' )
+						$( '<option></option>' ).text( new_designName ).attr( 'selected', 'selected' )
 					);
 
 					// Update the designs array for POST.
-					$( '[name=wpoa_login_form_designs]' ).val( encodeURIComponent( JSON.stringify( designs ) ) );
+					$( '[name=wpoa_login_formDesign]' ).val( encodeURIComponent( JSON.stringify( designs ) ) );
 
 					// Hide the design editor and show the design selector.
 					$( '#wpoa-login-form-design' ).parents( 'tr' ).show();
@@ -321,7 +321,7 @@
 		$( '#wpoa_logo_image_button' ).click(
 			function( e ) {
 				e.preventDefault();
-				wp_media_dialog_field = $( '#wpoa_logo_image' );
+				wpMediaDialogField = $( '#wpoa_logo_image' );
 				wpoa.selectMedia();
 			}
 		);
@@ -330,7 +330,7 @@
 		$( '#wpoa_bg_image_button' ).click(
 			function( e ) {
 				e.preventDefault();
-				wp_media_dialog_field = $( '#wpoa_bg_image' );
+				wpMediaDialogField = $( '#wpoa_bg_image' );
 				wpoa.selectMedia();
 			}
 		);
@@ -347,19 +347,19 @@
 		// Attach unlink button click events.
 		$( '.wpoa-unlink-account' ).click(
 			function( event ) {
-				var btn               = $( this );
-				var wpoa_identity_row = btn.data( 'wpoa-identity-row' );
-				var nonce             = btn.data( 'nonce' );
-				var post_data         = {};
+				var btn             = $( this );
+				var wpoaIdentityRow = btn.data( 'wpoa-identity-row' );
+				var nonce           = btn.data( 'nonce' );
+				var postData        = {};
 
 				event.preventDefault();
 
 				btn.hide();
 				btn.after( '<span> Please wait...</span>' );
 
-				post_data = {
+				postData = {
 					action: 'wpoa_unlink_account',
-					wpoa_identity_row: wpoa_identity_row,
+					wpoa_identity_row: wpoaIdentityRow,
 					nonce: nonce
 				};
 
@@ -367,7 +367,7 @@
 					{
 						type: 'POST',
 						url: wpoa_cvars.ajaxurl,
-						data: post_data,
+						data: postData,
 						success: function( json_response ) {
 							var oresponse = JSON.parse( json_response );
 							var linkButton;
@@ -380,10 +380,10 @@
 									}
 								);
 
-								linkButton = $( '.wpoa-login-button.' + wpoa_identity_row );
+								linkButton = $( '.wpoa-login-button.' + wpoaIdentityRow );
 
 								if ( linkButton.hasClass( 'disabled' ) ) {
-									linkButton.removeClass( 'disabled' )
+									linkButton.removeClass( 'disabled' );
 								}
 							}
 						}
@@ -395,7 +395,7 @@
 		// Handle login button click.
 		$( '.wpoa-login-button' ).click(
 			function( event ) {
-				var logging_in_title;
+				var loggingInTitle;
 
 				event.preventDefault();
 
@@ -412,15 +412,15 @@
 				$( '.wpoa-login-form .wpoa-logout-button' ).addClass( 'loading-other' );
 				$( this ).addClass( 'loading' );
 
-				logging_in_title = $( this ).parents( '.wpoa-login-form' ).data( 'logging-in-title' );
-				$( '.wpoa-login-form #wpoa-title' ).text( logging_in_title );
+				loggingInTitle = $( this ).parents( '.wpoa-login-form' ).data( 'logging-in-title' );
+				$( '.wpoa-login-form #wpoa-title' ).text( loggingInTitle );
 			}
 		);
 
 		// Handle logout button click.
 		$( '.wpoa-logout-button' ).click(
 			function() {
-				var logging_out_title;
+				var loggingOutTitle;
 
 				// Fade out the login form.
 				$( '#login #loginform' ).fadeOut();
@@ -432,8 +432,8 @@
 				$( '.wpoa-login-form .wpoa-logout-button' ).not( this ).addClass( 'loading-other' );
 				$( '.wpoa-login-form .wpoa-login-button' ).addClass( 'loading-other' );
 
-				logging_out_title = $( this ).parents( '.wpoa-login-form' ).data( 'logging-out-title' );
-				$( '.wpoa-login-form #wpoa-title' ).text( logging_out_title );
+				loggingOutTitle = $( this ).parents( '.wpoa-login-form' ).data( 'logging-out-title' );
+				$( '.wpoa-login-form #wpoa-title' ).text( loggingOutTitle );
 			}
 		);
 
@@ -442,7 +442,7 @@
 
 		// Var msg = wpoa_cvars.login_message; // TODO: this method doesn't work that well since we don't clear the session variable at the server...
 		if ( msg ) {
-			if ( wpoa_cvars.show_login_messages ) {
+			if ( '1' === wpoa_cvars.show_login_messages ) {
 
 				// Notify the client of the login result with a visible, short-lived message at the top of the screen.
 				wpoa.notify( msg );
@@ -459,24 +459,24 @@
 			// Bind mousemove, keypress events to reset the timeout.
 			$( document ).mousemove(
 				function() {
-					timeout_idle_time = 0;
+					timeoutIdleTime = 0;
 				}
 			);
 
 			$( document ).keypress(
 				function() {
-					timeout_idle_time = 0;
+					timeoutIdleTime = 0;
 				}
 			);
 
 			// Start a timer to keep track of each minute that passes.
-			timeout_interval = setInterval( wpoa.timeoutIncrement, 60000 );
+			timeoutInterval = setInterval( wpoa.timeoutIncrement, 60000 );
 		}
 
 		// Hide the login form if the admin enabled this setting.
 		// TODO: consider .remove() as well...maybe too intrusive though...and remember that bots don't use javascript
 		// so this won't remove it for bots and those bots can still spam the login form...
-		if ( 1 === wpoa_cvars.hide_login_form ) {
+		if ( '1' === wpoa_cvars.hide_login_form ) {
 			$( '#login #loginform' ).hide();
 			$( '#login #nav' ).hide();
 			$( '#login #backtoblog' ).hide();
@@ -496,13 +496,13 @@
 
 	// Handle idle timeout.
 	wpoa.timeoutIncrement = function() {
-		var duration = wpoa_cvars.logout_inactive_users;
-		if ( timeout_idle_time === duration - 1 ) {
+		var duration = parseInt( wpoa_cvars.logout_inactive_users );
+		if ( timeoutIdleTime === ( duration - 1 ) ) {
 
 			// Warning reached, next time we logout:.
-			timeout_idle_time += 1;
+			timeoutIdleTime += 1;
 			wpoa.notify( 'Your session will expire in 1 minute due to inactivity.' );
-		} else if ( timeout_idle_time === duration ) {
+		} else if ( timeoutIdleTime === duration ) {
 
 			// Idle duration reached, logout the user:.
 			wpoa.notify( 'Logging out due to inactivity...' );
@@ -517,14 +517,14 @@
 
 	// Shows the default wordpress media dialog for selecting or uploading an image.
 	wpoa.selectMedia = function() {
-		var custom_uploader;
+		var customUploader;
 
-		if ( custom_uploader ) {
-			custom_uploader.open();
+		if ( customUploader ) {
+			customUploader.open();
 			return;
 		}
 
-		custom_uploader = wp.media.frames.file_frame = wp.media(
+		customUploader = wp.media.frames.file_frame = wp.media(
 			{
 				title: 'Choose Image',
 				button: {
@@ -534,16 +534,16 @@
 			}
 		);
 
-		custom_uploader.on(
+		customUploader.on(
 			'select',
 			function() {
-				var attachment = custom_uploader.state().get( 'selection' ).first().toJSON();
+				var attachment = customUploader.state().get( 'selection' ).first().toJSON();
 
-				wp_media_dialog_field.val( attachment.url );
+				wpMediaDialogField.val( attachment.url );
 			}
 		);
 
-		custom_uploader.open();
+		customUploader.open();
 	};
 
 	// Displays a short-lived notification message at the top of the screen.
