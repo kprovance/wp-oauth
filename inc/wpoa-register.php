@@ -18,9 +18,6 @@ global $wpdb;
 // initiate the user session.
 session_start();
 
-print_r($_SESSION);
-die;
-
 // Prevent users from registering if the option is turned off in the dashboard.
 if ( ! get_option( 'users_can_register' ) ) {
 	$_SESSION['WPOA']['RESULT'] = 'Sorry, user registration is disabled at this time. Your account could not be registered. Please notify the admin or try again later.';

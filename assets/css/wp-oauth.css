@@ -173,19 +173,37 @@ body.wpoa-lightbox-visible {overflow:hidden;}
 .wpoa-layout-links-column a:after {content:"\A"; white-space:pre;} /* insert a break to convert the row into a column */
 
 /* buttons-row layout */
-.wpoa-layout-buttons-row {}
 .wpoa-layout-buttons-row a {border:2px solid transparent; box-sizing:border-box; display:inline-block; text-decoration:none; text-align:center; font-size:1em; padding:10px; background:#1e8cbe; color:#fff; margin-bottom:1px; margin-right:1px; -webkit-transition:all 0.5s ease; cursor:pointer;}
 .wpoa-layout-buttons-row a:hover {background:#c5c5c5;}
-.wpoa-layout-buttons-row a.loading{background:transparent !important; color:#999; cursor:default; border:2px solid #000;}
-.wpoa-layout-buttons-row a.loading-other{background:rgba(255,255,255,0) !important; color:#999; cursor:default;}
+.wpoa-layout-buttons-row a.loading{
+    cursor:default;
+    border:2px solid #000;
+    opacity: .3;
+    pointer-events: none;
+}
+.wpoa-layout-buttons-row a.loading-other{
+    opacity: .3;
+    pointer-events: none;
+    color:#999;
+    cursor:default;
+}
 
 /* buttons-column layout */
-.wpoa-layout-buttons-column {}
 .wpoa-layout-buttons-column a {border:2px solid transparent; box-sizing:border-box; display:block; text-decoration:none; text-align:center; font-size:1em; padding:10px; background:#1e8cbe; color:#fff; margin-bottom:1px; -webkit-transition:all 0.5s ease; cursor:pointer;}
 .wpoa-layout-buttons-column a:hover {background:#c5c5c5;}
 .wpoa-layout-buttons-column a:hover .icon {}
-.wpoa-layout-buttons-column a.loading{background:transparent !important; color:#999; cursor:default; border:2px solid #000;}
-.wpoa-layout-buttons-column a.loading-other{background:rgba(255,255,255,0) !important; color:#999; cursor:default;}
+.wpoa-layout-buttons-column a.loading{
+    cursor:default;
+    border:2px solid #000;
+    opacity: .3;
+    pointer-events: none;
+}
+.wpoa-layout-buttons-column a.loading-other{
+    opacity: .3;
+    pointer-events: none;
+    color:#999;
+    cursor:default;
+}
 
 /*  LINK-UNLINK PROVIDERS FORM STYLES
 =====================================*/

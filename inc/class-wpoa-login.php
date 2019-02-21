@@ -216,7 +216,7 @@ if ( ! class_exists( 'WPOA_Login' ) ) {
 			$html = '';
 
 			if ( get_option( 'wpoa_' . $provider . '_api_enabled' ) ) {
-				$html .= "<a id='wpoa-login-" . $provider . "' class='wpoa-login-button" . $disabled . " " . $query_result . "' href='" . $atts['site_url'] . '?connect=' . $provider . $atts['redirect_to'] . "'>";
+				$html .= "<a id='wpoa-login-" . $provider . "' class='wpoa-login-button" . $disabled . ' ' . $query_result . "' href='" . $atts['site_url'] . '?connect=' . $provider . $atts['redirect_to'] . "'>";
 
 				if ( 'none' !== $atts['icon_set'] ) {
 					$html .= "<img src='" . $atts['icon_set_path'] . $provider . ".png' alt='" . $display_name . "' class='icon'></img>";

@@ -45,8 +45,6 @@ if ( ! class_exists( 'WPOA_Shortcodes' ) ) {
 			wp_get_current_user();
 			$user_id = $current_user->ID;
 
-			$query_result = $wpdb->get_var( $wpdb->prepare( "SELECT $wpdb->usermeta.umeta_id FROM $wpdb->usermeta WHERE %d = $wpdb->usermeta.user_id AND $wpdb->usermeta.meta_key = 'wpoa_identity' AND $wpdb->usermeta.meta_value LIKE %s", $user_id, '%Google%' ) );
-
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery
 			$query_result = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM $wpdb->usermeta WHERE %d = $wpdb->usermeta.user_id AND $wpdb->usermeta.meta_key = 'wpoa_identity'", $user_id ) );
 
