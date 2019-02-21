@@ -172,10 +172,11 @@ if ( ! class_exists( 'Redux_OAuth', false ) ) {
 		 * @return bool|string
 		 */
 		private function curl( $params, $url, $post = false ) {
-			$url_params = http_build_query( $params );
-			$url        = $url . $url_params;
 			$curl       = curl_init();
-
+			if ( is_array( $params ) && count( $params  ) ) {
+				$url_params = http_build_query( $params );
+				$url = $url . $url_params;
+			}
 			curl_setopt( $curl, CURLOPT_URL, $url );
 			curl_setopt( $curl, CURLOPT_RETURNTRANSFER, 1 );
 
@@ -238,9 +239,11 @@ if ( ! class_exists( 'Redux_OAuth', false ) ) {
 			);
 
 			$url = $this->config['url_token'];
+			if ( isset( $this->config['get_oauth_token']['params_as_string'] ) && $this->config['get_oauth_token']['params_as_string'] ) {
+				$params = http_build_query( $params );
+			}
 
 			$result_obj = 'curl' === $this->config['http_util'] ? $this->curl( $params, $url, true ) : $this->stream( $params, $url );
-
 			if ( isset( $this->config['get_oauth_token']['json_decode'] ) && true === $this->config['get_oauth_token']['json_decode'] ) {
 				$result_obj = json_decode( $result_obj, true );
 			}
@@ -282,11 +285,9 @@ if ( ! class_exists( 'Redux_OAuth', false ) ) {
 			// set the access token param.
 			$params                 = $this->config['get_oauth_identity']['params'];
 			$params['access_token'] = $_SESSION['WPOA']['ACCESS_TOKEN'];
-
 			$url        = $this->config['url_user'];
 			$result_obj = 'curl' === $this->config['http_util'] ? $this->curl( $params, $url ) : $this->stream( $params, $url );
 			$result_obj = json_decode( $result_obj, true );
-
 			// parse and return the user's oauth identity.
 			$oauth_identity             = $result_obj;
 			$oauth_identity['provider'] = $_SESSION['WPOA']['PROVIDER'];

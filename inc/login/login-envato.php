@@ -21,6 +21,7 @@ $oauth->set_config(
 			'access_token' => 'access_token',
 			'expires_in'   => 'expires_in',
 			'json_decode'  => true,
+			'params_as_string'=> true,
 		),
 		'get_oauth_identity' => array(
 		),
