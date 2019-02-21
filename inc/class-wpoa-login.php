@@ -20,23 +20,17 @@ if ( ! class_exists( 'WPOA_Login' ) ) {
 		/**
 		 * Gets the content to be used for displaying the login/logout form.
 		 *
-		 * @param string $design Design.
-		 * @param string $icon_set Icon set.
-		 * @param string $layout Layout.
-		 * @param string $button_prefix Button prefix.
-		 * @param string $align Align.
-		 * @param string $show_login Show login.
-		 * @param string $show_logout Show logout.
-		 * @param string $logged_out_title Logged out title.
-		 * @param string $logged_in_title Logged in title.
-		 * @param string $logging_in_title Loggin in title.
-		 * @param string $logging_out_title Logging out title.
-		 * @param string $style Style.
-		 * @param string $class Class.
+		 * @param array $args Design args.
 		 *
 		 * @return string
 		 */
-		public function login_form_content( $design = '', $icon_set = 'icon_set', $layout = 'links-column', $button_prefix = '', $align = 'left', $show_login = 'conditional', $show_logout = 'conditional', $logged_out_title = 'Please login:', $logged_in_title = 'You are already logged in.', $logging_in_title = 'Logging in...', $logging_out_title = 'Logging out...', $style = '', $class = '' ) {
+		public function login_form_content( $args ) {
+
+			/* $design, $icon_set, $layout $button_prefix, $align, $show_login, $show_logout, $logged_out_title, $logged_in_title, $logging_in_title, $logging_out_title, $style, $class. */  // phpcs:ignore Squiz.PHP.CommentedOutCode
+
+			// phpcs:ignore WordPress.PHP.DontExtract
+			extract( $args );
+
 			// Even though wpoa_login_form() will pass a default, we might call this function from another method so it's important to re-specify the default values.
 			// If a design was specified and that design exists, load the shortcode attributes from that design.
 			if ( '' !== $design && $this->login_form_design_exists( $design ) ) { // TODO: remove first condition not needed.
@@ -204,6 +198,16 @@ if ( ! class_exists( 'WPOA_Login' ) ) {
 		 * @return string
 		 */
 		private function login_button( $provider, $display_name, $atts ) {
+			global $current_user;
+			global $wpdb;
+
+			// Get the current user.
+			wp_get_current_user();
+			$user_id = $current_user->ID;
+
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery
+			$query_result = $wpdb->get_var( $wpdb->prepare( "SELECT $wpdb->usermeta.umeta_id FROM $wpdb->usermeta WHERE %d = $wpdb->usermeta.user_id AND $wpdb->usermeta.meta_key = 'wpoa_identity' AND $wpdb->usermeta.meta_value LIKE %s", $user_id, '%' . $provider . '%' ) );
+
 			$html = '';
 
 			if ( get_option( 'wpoa_' . $provider . '_api_enabled' ) ) {

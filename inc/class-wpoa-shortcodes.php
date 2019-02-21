@@ -45,6 +45,8 @@ if ( ! class_exists( 'WPOA_Shortcodes' ) ) {
 			wp_get_current_user();
 			$user_id = $current_user->ID;
 
+			$query_result = $wpdb->get_var( $wpdb->prepare( "SELECT $wpdb->usermeta.umeta_id FROM $wpdb->usermeta WHERE %d = $wpdb->usermeta.user_id AND $wpdb->usermeta.meta_key = 'wpoa_identity' AND $wpdb->usermeta.meta_value LIKE %s", $user_id, '%Google%' ) );
+
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery
 			$query_result = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM $wpdb->usermeta WHERE %d = $wpdb->usermeta.user_id AND $wpdb->usermeta.meta_key = 'wpoa_identity'", $user_id ) );
 
@@ -87,7 +89,23 @@ if ( ! class_exists( 'WPOA_Shortcodes' ) ) {
 
 			if ( 'None' !== $design ) {
 				// TODO: we need to use $settings defaults here, not hard-coded defaults...
-				$html .= WPOA::$login->login_form_content( $design, 'none', 'buttons-row', 'Link', 'left', 'always', 'never', 'Select a provider:', 'Select a provider:', 'Authenticating...', '' ); // WPCS: XSS ok.
+				$args = array(
+					'design'            => $design,
+					'icon_set'          => 'none',
+					'layout'            => 'buttons-row',
+					'button_prefix'     => 'Link',
+					'align'             => 'left',
+					'show_login'        => 'always',
+					'show_logout'       => 'never',
+					'logged_out_title'  => 'Select a Provider',
+					'logged_in_title'   => 'Select a Provider',
+					'logging_in_title'  => 'Authenticating...',
+					'logging_out_title' => '',
+					'style'             => '',
+					'class'             => '',
+				);
+
+				$html .= WPOA::$login->login_form_content( $args ); // WPCS: XSS ok.
 			}
 
 			$html .= '</div>';
@@ -125,11 +143,24 @@ if ( ! class_exists( 'WPOA_Shortcodes' ) ) {
 				$atts
 			);
 
-			// Convert attribute strings to proper data types.
-			// $a['show_login'] = filter_var($a['show_login'], FILTER_VALIDATE_BOOLEAN);
-			// $a['show_logout'] = filter_var($a['show_logout'], FILTER_VALIDATE_BOOLEAN);.
+			$args = array(
+				'design'            => $a['design'],
+				'icon_set'          => $a['icon_set'],
+				'layout'            => $a['layout'],
+				'button_prefix'     => $a['button_prefix'],
+				'align'             => $a['align'],
+				'show_login'        => $a['show_login'],
+				'show_logout'       => $a['show_logout'],
+				'logged_out_title'  => $a['logged_out_title'],
+				'logged_in_title'   => $a['logged_in_title'],
+				'logging_in_title'  => $a['logging_in_title'],
+				'logging_out_title' => $a['logging_out_title'],
+				'style'             => $a['style'],
+				'class'             => $a['class'],
+			);
+
 			// Get the shortcode content.
-			$html = WPOA::$login->login_form_content( $a['design'], $a['icon_set'], $a['layout'], $a['button_prefix'], $a['align'], $a['show_login'], $a['show_logout'], $a['logged_out_title'], $a['logged_in_title'], $a['logging_in_title'], $a['logging_out_title'], $a['style'], $a['class'] );
+			$html = WPOA::$login->login_form_content( $args );
 
 			return $html;
 		}

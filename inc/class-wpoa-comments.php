@@ -36,9 +36,24 @@ if ( ! class_exists( 'WPOA_Comments' ) ) {
 			$design = get_option( 'wpoa_login_form_show_comments_section' );
 
 			if ( 'None' !== $design ) {
+				$args = array(
+					'design'            => $design,
+					'icon_set'          => 'none',
+					'layout'            => 'buttons-column',
+					'button_prefix'     => 'Connect with',
+					'align'             => 'center',
+					'show_login'        => 'conditional',
+					'show_logout'       => 'conditional',
+					'logged_out_title'  => 'Please Login:',
+					'logged_in_title'   => 'You are already logged in.',
+					'logging_in_title'  => 'Logging in...',
+					'logging_out_title' => 'Logging out...',
+					'style'             => '',
+					'class'             => '',
+				);
 
 				// TODO: we need to use $settings defaults here, not hard-coded defaults...
-				$html                  .= WPOA::$login->login_form_content( $design, 'none', 'buttons-column', 'Connect with', 'center', 'conditional', 'conditional', 'Please login:', 'You are already logged in.', 'Logging in...', 'Logging out...' );
+				$html                  .= WPOA::$login->login_form_content( $args );
 				$fields['logged_in_as'] = $html;
 			}
 
@@ -53,9 +68,24 @@ if ( ! class_exists( 'WPOA_Comments' ) ) {
 			$design = get_option( 'wpoa_login_form_show_comments_section' );
 
 			if ( 'None' !== $design ) {
+				$args = array(
+					'design'            => $design,
+					'icon_set'          => 'none',
+					'layout'            => 'buttons-column',
+					'button_prefix'     => 'Connect with',
+					'align'             => 'center',
+					'show_login'        => 'conditional',
+					'show_logout'       => 'conditional',
+					'logged_out_title'  => 'Please Login:',
+					'logged_in_title'   => 'You are already logged in.',
+					'logging_in_title'  => 'Logging in...',
+					'logging_out_title' => 'Logging out...',
+					'style'             => '',
+					'class'             => '',
+				);
 
 				// TODO: we need to use $settings defaults here, not hard-coded defaults...
-				$html .= WPOA::$login->login_form_content( $design, 'none', 'buttons-column', 'Connect with', 'center', 'conditional', 'conditional', 'Please login:', 'You are already logged in.', 'Logging in...', 'Logging out...' );
+				$html .= WPOA::$login->login_form_content( $args );
 			}
 
 			echo $html; // WPCS: XSS ok.

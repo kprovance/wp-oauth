@@ -146,6 +146,11 @@ body.wpoa-lightbox-visible {overflow:hidden;}
 .wpoa-login-button:focus {outline:0; background-color:#ddd;}
 .wpoa-logout-button:focus {outline:0; background-color:#ddd;}
 .wpoa-login-button .icon {vertical-align:middle; margin-left:0.25em; margin-right:0.25em; height:32px;}
+.wpoa-login-button.disabled {
+    pointer-events: none;
+    cursor: default;
+    opacity: .3;
+}
 
 /* title / button alignment */
 .wpoa-layout-align-left {}
