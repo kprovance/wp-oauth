@@ -199,7 +199,7 @@ if ( ! class_exists( 'Redux_OAuth', false ) ) {
 				$url_params = http_build_query( $params );
 				$url        = $url . $url_params;
 			} else {
-				$url        = $url . $params;
+				$url = $url . $params;
 			}
 
 			$sslverify = ( '1' === $this->config['util_verify_ssl'] ) ? true : false;
@@ -211,9 +211,8 @@ if ( ! class_exists( 'Redux_OAuth', false ) ) {
 				'httpversion' => '1.1',
 				'sslverify'   => $sslverify,
 				'headers'     => $headr,
-				'body'        => $body, //wp_json_encode( $params ),
+				'body'        => $body,
 			);
-
 
 			$result = wp_remote_post( $url, $args );
 
@@ -234,14 +233,13 @@ if ( ! class_exists( 'Redux_OAuth', false ) ) {
 		 * @return bool
 		 */
 		private function get_oauth_token( $code ) {
-				$params = array(
-				'grant_type'    => rawurlencode( 'authorization_code'),
-				'client_id'     => rawurlencode($this->config['client_id']),
-				'client_secret' => rawurlencode($this->config['client_secret']),
-				'code'          => rawurlencode($code),
+			$params = array(
+				'grant_type'    => rawurlencode( 'authorization_code' ),
+				'client_id'     => rawurlencode( $this->config['client_id'] ),
+				'client_secret' => rawurlencode( $this->config['client_secret'] ),
+				'code'          => rawurlencode( $code ),
 				'redirect_uri'  => $this->config['redirect_uri'],
 			);
-
 
 			$url = $this->config['url_token'];
 			if ( isset( $this->config['get_oauth_token']['params_as_string'] ) && $this->config['get_oauth_token']['params_as_string'] ) {
