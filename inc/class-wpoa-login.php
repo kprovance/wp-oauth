@@ -388,7 +388,7 @@ if ( ! class_exists( 'WPOA_Login' ) ) {
 		 */
 		public function link_account( $user_id, $oauth_identity ) {
 			if ( '' !== $_SESSION['WPOA']['USER_ID'] ) {
-				add_user_meta( $user_id, 'wpoa_identity', $_SESSION['WPOA']['PROVIDER'] . '|' . $_SESSION['WPOA']['USER_ID'] . '|' . time() . '|' . $oauth_identity['email'] . '|' . $oauth_identity['name'] );
+				add_user_meta( $user_id, 'wpoa_identity', $_SESSION['WPOA']['PROVIDER'] . '|' . $_SESSION['WPOA']['USER_ID'] . '|' . time() . '|' . $oauth_identity['email'] . '|' . $oauth_identity['name'] . '|' . $_SESSION['WPOA']['REFRESH_TOKEN'] );
 			}
 		}
 
@@ -399,6 +399,7 @@ if ( ! class_exists( 'WPOA_Login' ) ) {
 			unset( $_SESSION['WPOA']['USER_ID'] );
 			unset( $_SESSION['WPOA']['USER_EMAIL'] );
 			unset( $_SESSION['WPOA']['ACCESS_TOKEN'] );
+			unset( $_SESSION['WPOA']['REFRESH_TOKEN'] );
 			unset( $_SESSION['WPOA']['EXPIRES_IN'] );
 			unset( $_SESSION['WPOA']['EXPIRES_AT'] );
 		}
