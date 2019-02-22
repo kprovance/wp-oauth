@@ -38,12 +38,17 @@ $oauth->set_config(
  * @return array
  */
 function envato_get_oauth_identity( $e ) {
+	$params = $e->config;
+
 	$params['access_token'] = $_SESSION['WPOA']['ACCESS_TOKEN'];
 	$url                    = $e->config['url_user'];
 	$oauth_identity         = array();
 
 	// Fetch the profile.
 	$result_obj                = $e->remote_post( $params, $url );
+// print_r($result_obj);
+die;
+
 	$result_obj                = json_decode( $result_obj, true );
 	$oauth_identity['name']    = $result_obj['account']['firstname'] . ' ' . $result_obj['account']['surname'];
 	$oauth_identity['image']   = $result_obj['account']['image'];

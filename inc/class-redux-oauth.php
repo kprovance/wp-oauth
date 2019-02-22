@@ -89,6 +89,8 @@ if ( ! class_exists( 'Redux_OAuth', false ) ) {
 					} else {
 						$oauth_identity = $this->get_oauth_identity();
 					}
+print_r($oauth_identity);
+die;
 
 					if ( ! isset( $oauth_identity['id'] ) ) {
 						WPOA::$login->end_login( 'Sorry, we couldn\'t log you in. User identity was not found. Please notify the admin or try again later.' );
@@ -197,25 +199,32 @@ if ( ! class_exists( 'Redux_OAuth', false ) ) {
 
 			if ( is_array( $params ) && count( $params ) ) {
 				$url_params = http_build_query( $params );
-				$url        = $url . $url_params;
+				$url        = $url; // . $url_params;
 			} else {
-				$url = $url . $params;
+				$url        = $url . $params;
 			}
-
+// var_dump($url);
 			$sslverify = ( '1' === $this->config['util_verify_ssl'] ) ? true : false;
 			$body      = is_array( $params ) ? wp_json_encode( $params ) : $params;
+			$post      = false === $post ? 'GET' : 'POST';
 
+
+			if ($post === 'GET') {
+				$body = '';
+			}
 			$args = array(
-				'method'      => 'POST',
+				'method'      => $post,
 				'timeout'     => 45,
 				'httpversion' => '1.1',
 				'sslverify'   => $sslverify,
 				'headers'     => $headr,
-				'body'        => $body,
+				'body'        => $body, //wp_json_encode( $params ),
 			);
+print_r($headr);
+print_r($args);
 
 			$result = wp_remote_post( $url, $args );
-
+ var_dump($result);
 			if ( ! is_wp_error( $result ) && 200 === wp_remote_retrieve_response_code( $result ) ) {
 				$result = wp_remote_retrieve_body( $result );
 			} else {
@@ -233,13 +242,14 @@ if ( ! class_exists( 'Redux_OAuth', false ) ) {
 		 * @return bool
 		 */
 		private function get_oauth_token( $code ) {
-			$params = array(
-				'grant_type'    => rawurlencode( 'authorization_code' ),
-				'client_id'     => rawurlencode( $this->config['client_id'] ),
-				'client_secret' => rawurlencode( $this->config['client_secret'] ),
-				'code'          => rawurlencode( $code ),
+				$params = array(
+				'grant_type'    => rawurlencode( 'authorization_code'),
+				'client_id'     => rawurlencode($this->config['client_id']),
+				'client_secret' => rawurlencode($this->config['client_secret']),
+				'code'          => rawurlencode($code),
 				'redirect_uri'  => $this->config['redirect_uri'],
 			);
+
 
 			$url = $this->config['url_token'];
 			if ( isset( $this->config['get_oauth_token']['params_as_string'] ) && $this->config['get_oauth_token']['params_as_string'] ) {
@@ -299,6 +309,8 @@ if ( ! class_exists( 'Redux_OAuth', false ) ) {
 
 			$result_obj = $this->remote_post( $params, $url );
 			$result_obj = json_decode( $result_obj, true );
+print_r($result_obj);
+die;
 
 			// parse and return the user's oauth identity.
 			$oauth_identity             = $result_obj;
