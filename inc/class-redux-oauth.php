@@ -89,8 +89,6 @@ if ( ! class_exists( 'Redux_OAuth', false ) ) {
 					} else {
 						$oauth_identity = $this->get_oauth_identity();
 					}
-print_r($oauth_identity);
-die;
 
 					if ( ! isset( $oauth_identity['id'] ) ) {
 						WPOA::$login->end_login( 'Sorry, we couldn\'t log you in. User identity was not found. Please notify the admin or try again later.' );
@@ -183,7 +181,7 @@ die;
 		}
 
 		/**
-		 * Function Remote post.
+		 * Function cURL.
 		 *
 		 * @param array  $params Params.
 		 * @param string $url    URL.
@@ -191,44 +189,60 @@ die;
 		 *
 		 * @return bool|string
 		 */
-		public function remote_post( $params, $url, $post = false ) {
+		public function curl( $params, $url, $post = false ) {
+			$curl = curl_init();
+
 			if ( isset( $this->config['authorization_header'] ) && isset( $params['access_token'] ) ) {
 				$headr = array( 'Authorization: ' . $this->config['authorization_header'] . ' ' . $params['access_token'] );
+				curl_setopt( $curl, CURLOPT_HTTPHEADER, $headr );
 				unset( $params['access_token'] );
 			}
 
 			if ( is_array( $params ) && count( $params ) ) {
 				$url_params = http_build_query( $params );
-				$url        = $url; // . $url_params;
-			} else {
-				$url        = $url . $params;
+				$url        = $url . $url_params;
 			}
-// var_dump($url);
-			$sslverify = ( '1' === $this->config['util_verify_ssl'] ) ? true : false;
-			$body      = is_array( $params ) ? wp_json_encode( $params ) : $params;
-			$post      = false === $post ? 'GET' : 'POST';
 
+			curl_setopt( $curl, CURLOPT_URL, $url );
+			curl_setopt( $curl, CURLOPT_RETURNTRANSFER, 1 );
 
-			if ($post === 'GET') {
-				$body = '';
+			if ( $post ) {
+				curl_setopt( $curl, CURLOPT_POST, 1 );
+				curl_setopt( $curl, CURLOPT_POSTFIELDS, $params );
+				curl_setopt( $curl, CURLOPT_SSL_VERIFYPEER, ( '1' === $this->config['util_verify_ssl'] ? 1 : 0 ) );
+				curl_setopt( $curl, CURLOPT_SSL_VERIFYHOST, ( '1' === $this->config['util_verify_ssl'] ? 2 : 0 ) );
 			}
-			$args = array(
-				'method'      => $post,
-				'timeout'     => 45,
-				'httpversion' => '1.1',
-				'sslverify'   => $sslverify,
-				'headers'     => $headr,
-				'body'        => $body, //wp_json_encode( $params ),
+
+			$result = curl_exec( $curl );
+
+			return $result;
+		}
+
+		/**
+		 * Steam.
+		 *
+		 * @param array  $params Params.
+		 * @param string $url    URL.
+		 *
+		 * @return false|string
+		 */
+		public function stream( $params, $url ) {
+			$url_params = http_build_query( $params );
+			$url        = rtrim( $url, '?' );
+
+			$opts = array(
+				'http' => array(
+					'method'  => 'POST',
+					'header'  => 'Content-type: application/x-www-form-urlencoded',
+					'content' => $url_params,
+				),
 			);
-print_r($headr);
-print_r($args);
 
-			$result = wp_remote_post( $url, $args );
- var_dump($result);
-			if ( ! is_wp_error( $result ) && 200 === wp_remote_retrieve_response_code( $result ) ) {
-				$result = wp_remote_retrieve_body( $result );
-			} else {
-				$result = '';
+			$context = $context = stream_context_create( $opts );
+			$result  = @file_get_contents( $url, false, $context );
+
+			if ( false === $result ) {
+				WPOA::$login->end_login( "Sorry, we couldn't log you in. Could not retrieve access token via stream context. Please notify the admin or try again later." );
 			}
 
 			return $result;
@@ -242,25 +256,23 @@ print_r($args);
 		 * @return bool
 		 */
 		private function get_oauth_token( $code ) {
-				$params = array(
-				'grant_type'    => rawurlencode( 'authorization_code'),
-				'client_id'     => rawurlencode($this->config['client_id']),
-				'client_secret' => rawurlencode($this->config['client_secret']),
-				'code'          => rawurlencode($code),
+			$params = array(
+				'grant_type'    => 'authorization_code',
+				'client_id'     => $this->config['client_id'],
+				'client_secret' => $this->config['client_secret'],
+				'code'          => $code,
 				'redirect_uri'  => $this->config['redirect_uri'],
 			);
-
 
 			$url = $this->config['url_token'];
 			if ( isset( $this->config['get_oauth_token']['params_as_string'] ) && $this->config['get_oauth_token']['params_as_string'] ) {
 				$params = http_build_query( $params );
 			}
 
-			$result_obj = $this->remote_post( $params, $url, true );
+			$result_obj = 'curl' === $this->config['http_util'] ? $this->curl( $params, $url, true ) : $this->stream( $params, $url );
 			if ( isset( $this->config['get_oauth_token']['json_decode'] ) && true === $this->config['get_oauth_token']['json_decode'] ) {
 				$result_obj = json_decode( $result_obj, true );
 			}
-
 			// process the result.
 			$access_token = $result_obj[ $this->config['get_oauth_token']['access_token'] ];
 			$expires_in   = $result_obj[ $this->config['get_oauth_token']['expires_in'] ];
@@ -307,10 +319,8 @@ print_r($args);
 
 			$url = $this->config['url_user'];
 
-			$result_obj = $this->remote_post( $params, $url );
+			$result_obj = 'curl' === $this->config['http_util'] ? $this->curl( $params, $url ) : $this->stream( $params, $url );
 			$result_obj = json_decode( $result_obj, true );
-print_r($result_obj);
-die;
 
 			// parse and return the user's oauth identity.
 			$oauth_identity             = $result_obj;
