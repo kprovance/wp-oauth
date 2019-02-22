@@ -189,12 +189,9 @@ if ( ! class_exists( 'Redux_OAuth', false ) ) {
 		 *
 		 * @return bool|string
 		 */
-		public function curl( $params, $url, $post = false ) {
-			$curl = curl_init();
-
+		public function get_token( $params, $url, $post = false ) {
 			if ( isset( $this->config['authorization_header'] ) && isset( $params['access_token'] ) ) {
 				$headr = array( 'Authorization: ' . $this->config['authorization_header'] . ' ' . $params['access_token'] );
-				curl_setopt( $curl, CURLOPT_HTTPHEADER, $headr );
 				unset( $params['access_token'] );
 			}
 
@@ -203,46 +200,23 @@ if ( ! class_exists( 'Redux_OAuth', false ) ) {
 				$url        = $url . $url_params;
 			}
 
-			curl_setopt( $curl, CURLOPT_URL, $url );
-			curl_setopt( $curl, CURLOPT_RETURNTRANSFER, 1 );
+			$sslverify = ( '1' === $this->config['util_verify_ssl'] ) ? true : false;
 
-			if ( $post ) {
-				curl_setopt( $curl, CURLOPT_POST, 1 );
-				curl_setopt( $curl, CURLOPT_POSTFIELDS, $params );
-				curl_setopt( $curl, CURLOPT_SSL_VERIFYPEER, ( '1' === $this->config['util_verify_ssl'] ? 1 : 0 ) );
-				curl_setopt( $curl, CURLOPT_SSL_VERIFYHOST, ( '1' === $this->config['util_verify_ssl'] ? 2 : 0 ) );
-			}
-
-			$result = curl_exec( $curl );
-
-			return $result;
-		}
-
-		/**
-		 * Steam.
-		 *
-		 * @param array  $params Params.
-		 * @param string $url    URL.
-		 *
-		 * @return false|string
-		 */
-		public function stream( $params, $url ) {
-			$url_params = http_build_query( $params );
-			$url        = rtrim( $url, '?' );
-
-			$opts = array(
-				'http' => array(
-					'method'  => 'POST',
-					'header'  => 'Content-type: application/x-www-form-urlencoded',
-					'content' => $url_params,
-				),
+			$args = array(
+				'method'      => 'POST',
+				'timeout'     => 45,
+				'httpversion' => '1.0',
+				'sslverify'   => $sslverify,
+				'headers'     => $headr,
+				'body'        => wp_json_encode( $params ),
 			);
 
-			$context = $context = stream_context_create( $opts );
-			$result  = @file_get_contents( $url, false, $context );
+			$result = wp_remote_post( $url, $args );
 
-			if ( false === $result ) {
-				WPOA::$login->end_login( "Sorry, we couldn't log you in. Could not retrieve access token via stream context. Please notify the admin or try again later." );
+			if ( ! is_wp_error( $result ) && 200 === wp_remote_retrieve_response_code( $result ) ) {
+				$result = wp_remote_retrieve_body( $result );
+			} else {
+				$result = '';
 			}
 
 			return $result;
@@ -269,7 +243,7 @@ if ( ! class_exists( 'Redux_OAuth', false ) ) {
 				$params = http_build_query( $params );
 			}
 
-			$result_obj = 'curl' === $this->config['http_util'] ? $this->curl( $params, $url, true ) : $this->stream( $params, $url );
+			$result_obj = $this->get_token( $params, $url, true );
 			if ( isset( $this->config['get_oauth_token']['json_decode'] ) && true === $this->config['get_oauth_token']['json_decode'] ) {
 				$result_obj = json_decode( $result_obj, true );
 			}
@@ -319,7 +293,7 @@ if ( ! class_exists( 'Redux_OAuth', false ) ) {
 
 			$url = $this->config['url_user'];
 
-			$result_obj = 'curl' === $this->config['http_util'] ? $this->curl( $params, $url ) : $this->stream( $params, $url );
+			$result_obj = $this->get_token($params, $url); // 'curl' === $this->config['http_util'] ? $this->curl( $params, $url ) : $this->stream( $params, $url );
 			$result_obj = json_decode( $result_obj, true );
 
 			// parse and return the user's oauth identity.
