@@ -181,7 +181,7 @@ if ( ! class_exists( 'Redux_OAuth', false ) ) {
 		}
 
 		/**
-		 * Function cURL.
+		 * Function Remote post.
 		 *
 		 * @param array  $params Params.
 		 * @param string $url    URL.
@@ -189,7 +189,7 @@ if ( ! class_exists( 'Redux_OAuth', false ) ) {
 		 *
 		 * @return bool|string
 		 */
-		public function get_token( $params, $url, $post = false ) {
+		public function remote_post( $params, $url, $post = false ) {
 			if ( isset( $this->config['authorization_header'] ) && isset( $params['access_token'] ) ) {
 				$headr = array( 'Authorization: ' . $this->config['authorization_header'] . ' ' . $params['access_token'] );
 				unset( $params['access_token'] );
@@ -243,7 +243,7 @@ if ( ! class_exists( 'Redux_OAuth', false ) ) {
 				$params = http_build_query( $params );
 			}
 
-			$result_obj = $this->get_token( $params, $url, true );
+			$result_obj = $this->remote_post( $params, $url, true );
 			if ( isset( $this->config['get_oauth_token']['json_decode'] ) && true === $this->config['get_oauth_token']['json_decode'] ) {
 				$result_obj = json_decode( $result_obj, true );
 			}
@@ -293,7 +293,7 @@ if ( ! class_exists( 'Redux_OAuth', false ) ) {
 
 			$url = $this->config['url_user'];
 
-			$result_obj = $this->get_token($params, $url); // 'curl' === $this->config['http_util'] ? $this->curl( $params, $url ) : $this->stream( $params, $url );
+			$result_obj = $this->remote_post( $params, $url );
 			$result_obj = json_decode( $result_obj, true );
 
 			// parse and return the user's oauth identity.
