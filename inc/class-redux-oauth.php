@@ -275,7 +275,6 @@ if ( ! class_exists( 'Redux_OAuth', false ) ) {
 
 			$expires_at = time() + $expires_in;
 
-
 			// handle the result.
 			if ( ! $access_token || ! $expires_in ) {
 
@@ -307,7 +306,7 @@ if ( ! class_exists( 'Redux_OAuth', false ) ) {
 				$params = $this->config['get_oauth_identity']['params'];
 			}
 
-			$params[$key_name] = $_SESSION['WPOA']['ACCESS_TOKEN'];
+			$params[ $key_name ] = $_SESSION['WPOA']['ACCESS_TOKEN'];
 
 			$url = $this->config['url_user'];
 
