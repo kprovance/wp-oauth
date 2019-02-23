@@ -181,6 +181,62 @@ if ( ! class_exists( 'Redux_OAuth', false ) ) {
 		}
 
 		/**
+		 * Function Remote post.
+		 *
+		 * @param array  $params Params.
+		 * @param string $url    URL.
+		 * @param bool   $post   Is post.
+		 *
+		 * @return bool|string
+		 */
+		public function remote_post( $params, $url, $post = false ) {
+			if ( isset( $this->config['authorization_header'] ) && isset( $params['access_token'] ) ) {
+				$headr = 'Authorization: ' . $this->config['authorization_header'] . ' ' . $params['access_token'];
+				unset( $params['access_token'] );
+			}
+
+			if ( is_array( $params ) && count( $params ) ) {
+				$url_params = http_build_query( $params );
+				$url        = $url . $url_params;
+			}
+
+			$sslverify = ( '1' === $this->config['util_verify_ssl'] ) ? true : false;
+
+			if ( false === $post ) {
+				$method = 'GET';
+				$body   = null;
+			} else {
+				$method = 'POST';
+				$body   = is_array( $params ) ? wp_json_encode( $params ) : $params;
+			}
+
+			$args = array(
+				'method'      => $method,
+				'user-agent'  =>  'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8) AppleWebKit/535.6.2 (KHTML, like Gecko) Version/5.2 Safari/535.6.2',
+				'timeout'     => 45,
+				'httpversion' => '1.1',
+				'sslverify'   => $sslverify,
+				'headers'     => $headr,
+				'body'        => $body,
+			);
+
+			if ( false === $post ) {
+				$result = wp_remote_get( $url, $args );
+			} else {
+				$result = wp_remote_post( $url, $args );
+			}
+
+			if ( ! is_wp_error( $result ) && 200 === wp_remote_retrieve_response_code( $result ) ) {
+				$result = wp_remote_retrieve_body( $result );
+			} else {
+				$result = '';
+			}
+
+			return $result;
+		}
+
+
+		/**
 		 * Function cURL.
 		 *
 		 * @param array  $params Params.
@@ -212,6 +268,7 @@ if ( ! class_exists( 'Redux_OAuth', false ) ) {
 				curl_setopt( $curl, CURLOPT_SSL_VERIFYPEER, ( '1' === $this->config['util_verify_ssl'] ? 1 : 0 ) );
 				curl_setopt( $curl, CURLOPT_SSL_VERIFYHOST, ( '1' === $this->config['util_verify_ssl'] ? 2 : 0 ) );
 			}
+
 
 			$result = curl_exec( $curl );
 

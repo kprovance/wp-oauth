@@ -30,6 +30,8 @@ $oauth->set_config(
 	)
 );
 
+
+
 /**
  * We need extra calls to construct the identitity.
  *
@@ -43,21 +45,22 @@ function envato_get_oauth_identity( $e ) {
 	$oauth_identity         = array();
 
 	// Fetch the profile.
-	$result_obj                = 'curl' === $e->config['http_util'] ? $e->curl( $params, $url ) : $e->stream( $params, $url );
+	$result_obj                = $e->remote_post( $params, $url ); // 'curl' === $e->config['http_util'] ? $e->curl( $params, $url ) : $e->stream( $params, $url );
 	$result_obj                = json_decode( $result_obj, true );
+
 	$oauth_identity['name']    = $result_obj['account']['firstname'] . ' ' . $result_obj['account']['surname'];
 	$oauth_identity['image']   = $result_obj['account']['image'];
 	$oauth_identity['country'] = $result_obj['account']['country'];
 
 	// Fetch the username.
 	$url                  = 'https://api.envato.com/v1/market/private/user/username.json';
-	$result_obj           = 'curl' === $e->config['http_util'] ? $e->curl( $params, $url ) : $e->stream( $params, $url );
+	$result_obj           = $e->remote_post( $params, $url ); // 'curl' === $e->config['http_util'] ? $e->curl( $params, $url ) : $e->stream( $params, $url );
 	$result_obj           = json_decode( $result_obj, true );
 	$oauth_identity['id'] = $result_obj['username'];
 
 	// Fetch the email.
 	$url                     = 'https://api.envato.com/v1/market/private/user/email.json';
-	$result_obj              = 'curl' === $e->config['http_util'] ? $e->curl( $params, $url ) : $e->stream( $params, $url );
+	$result_obj              = $e->remote_post( $params, $url ); // 'curl' === $e->config['http_util'] ? $e->curl( $params, $url ) : $e->stream( $params, $url );
 	$result_obj              = json_decode( $result_obj, true );
 	$oauth_identity['email'] = $result_obj['email'];
 
