@@ -20,9 +20,12 @@ $oauth->set_config(
 		'get_oauth_token' => array(
 			'access_token' => 'access_token',
 			'json_decode'  => false,
+			'parse_str' => true,
 		),
 	)
 );
+
+$oauth->auth_flow();
 
 return;
 
