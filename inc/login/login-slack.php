@@ -28,4 +28,14 @@ $oauth->set_config(
 	)
 );
 
+function slack_fix_oauth_identity( $oauth_identity ) {
+
+	echo 'callback';
+	print_r( $oauth_identity );
+	die;
+	return $oauth_identity;
+}
+
+add_filter( 'WPOA_slack_fix_oauth_identity', 'slack_fix_oauth_identity' );
+
 $oauth->auth_flow();

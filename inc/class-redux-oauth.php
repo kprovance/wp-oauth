@@ -319,6 +319,12 @@ if ( ! class_exists( 'Redux_OAuth', false ) ) {
 			$result_obj = $this->remote_post( $params, $url );
 			$result_obj = json_decode( $result_obj, true );
 
+			$login_callback = 'WPOA_' . $this->config['provider'] . '_fix_oauth_identity';
+
+			if ( has_action( $login_callback ) ) {
+				$result_obj = apply_filters( $login_callback, $result_obj );
+			}
+
 			// parse and return the user's oauth identity.
 			$oauth_identity             = $result_obj;
 			$oauth_identity['provider'] = $_SESSION['WPOA']['PROVIDER'];
