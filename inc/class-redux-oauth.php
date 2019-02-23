@@ -212,7 +212,7 @@ if ( ! class_exists( 'Redux_OAuth', false ) ) {
 
 			$args = array(
 				'method'      => $method,
-				'user-agent'  =>  'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8) AppleWebKit/535.6.2 (KHTML, like Gecko) Version/5.2 Safari/535.6.2',
+				'user-agent'  => 'Redux OAuth/' . WPOA::$version . '; ' . get_bloginfo( 'url' ),
 				'timeout'     => 45,
 				'httpversion' => '1.1',
 				'sslverify'   => $sslverify,
@@ -326,7 +326,8 @@ if ( ! class_exists( 'Redux_OAuth', false ) ) {
 				$params = http_build_query( $params );
 			}
 
-			$result_obj = 'curl' === $this->config['http_util'] ? $this->curl( $params, $url, true ) : $this->stream( $params, $url );
+			$result_obj = $this->remote_post( $params, $url, true ); // 'curl' === $this->config['http_util'] ? $this->curl( $params, $url, true ) : $this->stream( $params, $url );
+
 			if ( isset( $this->config['get_oauth_token']['json_decode'] ) && true === $this->config['get_oauth_token']['json_decode'] ) {
 				$result_obj = json_decode( $result_obj, true );
 			}
