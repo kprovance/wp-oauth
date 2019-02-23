@@ -235,76 +235,6 @@ if ( ! class_exists( 'Redux_OAuth', false ) ) {
 			return $result;
 		}
 
-
-		/**
-		 * Function cURL.
-		 *
-		 * @param array  $params Params.
-		 * @param string $url    URL.
-		 * @param bool   $post   Is post.
-		 *
-		 * @return bool|string
-		 */
-		public function curl( $params, $url, $post = false ) {
-			$curl = curl_init();
-
-			if ( isset( $this->config['authorization_header'] ) && isset( $params['access_token'] ) ) {
-				$headr = array( 'Authorization: ' . $this->config['authorization_header'] . ' ' . $params['access_token'] );
-				curl_setopt( $curl, CURLOPT_HTTPHEADER, $headr );
-				unset( $params['access_token'] );
-			}
-
-			if ( is_array( $params ) && count( $params ) ) {
-				$url_params = http_build_query( $params );
-				$url        = $url . $url_params;
-			}
-
-			curl_setopt( $curl, CURLOPT_URL, $url );
-			curl_setopt( $curl, CURLOPT_RETURNTRANSFER, 1 );
-
-			if ( $post ) {
-				curl_setopt( $curl, CURLOPT_POST, 1 );
-				curl_setopt( $curl, CURLOPT_POSTFIELDS, $params );
-				curl_setopt( $curl, CURLOPT_SSL_VERIFYPEER, ( '1' === $this->config['util_verify_ssl'] ? 1 : 0 ) );
-				curl_setopt( $curl, CURLOPT_SSL_VERIFYHOST, ( '1' === $this->config['util_verify_ssl'] ? 2 : 0 ) );
-			}
-
-
-			$result = curl_exec( $curl );
-
-			return $result;
-		}
-
-		/**
-		 * Steam.
-		 *
-		 * @param array  $params Params.
-		 * @param string $url    URL.
-		 *
-		 * @return false|string
-		 */
-		public function stream( $params, $url ) {
-			$url_params = http_build_query( $params );
-			$url        = rtrim( $url, '?' );
-
-			$opts = array(
-				'http' => array(
-					'method'  => 'POST',
-					'header'  => 'Content-type: application/x-www-form-urlencoded',
-					'content' => $url_params,
-				),
-			);
-
-			$context = $context = stream_context_create( $opts );
-			$result  = @file_get_contents( $url, false, $context );
-
-			if ( false === $result ) {
-				WPOA::$login->end_login( "Sorry, we couldn't log you in. Could not retrieve access token via stream context. Please notify the admin or try again later." );
-			}
-
-			return $result;
-		}
-
 		/**
 		 * Get OAuth token.
 		 *
@@ -326,11 +256,12 @@ if ( ! class_exists( 'Redux_OAuth', false ) ) {
 				$params = http_build_query( $params );
 			}
 
-			$result_obj = $this->remote_post( $params, $url, true ); // 'curl' === $this->config['http_util'] ? $this->curl( $params, $url, true ) : $this->stream( $params, $url );
+			$result_obj = $this->remote_post( $params, $url, true );
 
 			if ( isset( $this->config['get_oauth_token']['json_decode'] ) && true === $this->config['get_oauth_token']['json_decode'] ) {
 				$result_obj = json_decode( $result_obj, true );
 			}
+
 			// process the result.
 			$access_token = $result_obj[ $this->config['get_oauth_token']['access_token'] ];
 			$expires_in   = $result_obj[ $this->config['get_oauth_token']['expires_in'] ];
