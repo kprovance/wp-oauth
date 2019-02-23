@@ -38,10 +38,11 @@ function google_fix_oauth_identity( $oauth_identity ) {
 
 	$temp['email'] = isset( $oauth_identity['emails'][0]['value'] ) ? $oauth_identity['emails'][0]['value'] : '';
 	$temp['name']  = isset( $oauth_identity['displayName'] ) ? $oauth_identity['displayName'] : '';
+	echo 'callback';
 
 	return $temp;
 }
 
-add_filter( 'WPOA_Google_fix_oauth_identity', 'google_fix_oauth_identity' );
+add_filter( 'WPOA_google_fix_oauth_identity', 'google_fix_oauth_identity' );
 
 $oauth->auth_flow();
