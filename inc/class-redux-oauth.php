@@ -264,9 +264,9 @@ if ( ! class_exists( 'Redux_OAuth', false ) ) {
 			}
 
 			if ( isset( $this->config['get_oauth_token']['parse_str'] ) && true === $this->config['get_oauth_token']['parse_str'] ) {
-				parse_str($result_obj, $result);
+				parse_str( $result_obj, $result );
 				$result_obj = $result;
-			} 
+			}
 
 			// process the result.
 			$access_token = isset( $result_obj[ $this->config['get_oauth_token']['access_token'] ] ) ? $result_obj[ $this->config['get_oauth_token']['access_token'] ] : false;
@@ -279,7 +279,6 @@ if ( ! class_exists( 'Redux_OAuth', false ) ) {
 			}
 
 			$expires_at = time() + $expires_in;
-
 
 			// handle the result.
 			if ( ! $access_token || ! $expires_in ) {
@@ -312,7 +311,7 @@ if ( ! class_exists( 'Redux_OAuth', false ) ) {
 				$params = $this->config['get_oauth_identity']['params'];
 			}
 
-			$params[$key_name] = $_SESSION['WPOA']['ACCESS_TOKEN'];
+			$params[ $key_name ] = $_SESSION['WPOA']['ACCESS_TOKEN'];
 
 			$url = $this->config['url_user'];
 
