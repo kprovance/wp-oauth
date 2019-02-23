@@ -267,7 +267,8 @@ if ( ! class_exists( 'Redux_OAuth', false ) ) {
 				parse_str( $result_obj, $result );
 				$result_obj = $result;
 			}
-
+//print_r($result_obj);
+//die;
 			// process the result.
 			$access_token = isset( $result_obj[ $this->config['get_oauth_token']['access_token'] ] ) ? $result_obj[ $this->config['get_oauth_token']['access_token'] ] : false;
 			$expires_in   = isset( $result_obj[ $this->config['get_oauth_token']['expires_in'] ] ) ? $result_obj[ $this->config['get_oauth_token']['expires_in'] ] : 5179152;

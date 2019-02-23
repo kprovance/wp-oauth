@@ -258,7 +258,11 @@ if ( ! class_exists( 'WPOA_Login' ) ) {
 
 			// try to find a matching WordPress user for the now-authenticated user's oauth identity.
 			$matched_user = $this->match_wordpress_user( $oauth_identity );
-
+echo 'bitch';
+print_r($oauth_identity['id']);
+echo '<br>';
+print_r($matched_user);
+die;
 			// handle the matched user if there is one.
 			if ( $matched_user ) {
 				$this->initiate_login( $matched_user );
@@ -327,6 +331,10 @@ if ( ! class_exists( 'WPOA_Login' ) ) {
 		private function match_wordpress_user( $oauth_identity ) {
 			// attempt to get a WordPress user id from the database that matches the $oauth_identity['id'] value.
 			global $wpdb;
+
+			if ( ! isset( $oauth_identity['id'] ) ) {
+				return;
+			}
 
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery
 			$query_result = $wpdb->get_var( $wpdb->prepare( "SELECT $wpdb->usermeta.user_id FROM $wpdb->usermeta WHERE $wpdb->usermeta.meta_key = 'wpoa_identity' AND $wpdb->usermeta.meta_value LIKE %s", '%' . $wpdb->esc_like( $oauth_identity['provider'] ) . '|' . $wpdb->esc_like( $oauth_identity['id'] ) . '%' ) );
