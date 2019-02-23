@@ -19,7 +19,6 @@ $oauth->set_config(
 		'scope'              => 'identity.basic, identity.email',
 		'get_oauth_token'    => array(
 			'access_token'     => 'access_token',
-			'params_as_string' => true,
 			'json_decode'      => true,
 			'params_as_string' => true,
 		),

@@ -1,20 +1,30 @@
 <?php
+/**
+ * WP-OAuth Github config
+ *
+ * @package WP-OAuth
+ */
 
-// start the user session for maintaining individual user states during the multi-stage authentication flow:
-session_start();
+defined( 'ABSPATH' ) || exit;
 
-# DEFINE THE OAUTH PROVIDER AND SETTINGS TO USE #
-$_SESSION['WPOA']['PROVIDER'] = 'Github';
-define('HTTP_UTIL', get_option('wpoa_http_util'));
-define('CLIENT_ENABLED', get_option('wpoa_github_api_enabled'));
-define('CLIENT_ID', get_option('wpoa_github_api_id'));
-define('CLIENT_SECRET', get_option('wpoa_github_api_secret'));
-define('REDIRECT_URI', rtrim(site_url(), '/') . '/');
-define('SCOPE', 'user:email'); // PROVIDER SPECIFIC: "user" is the minimum scope required to get the user's id from Github
-define('URL_AUTH', "https://github.com/login/oauth/authorize?");
-define('URL_TOKEN', "https://github.com/login/oauth/access_token?");
-define('URL_USER', "https://api.github.com/user?");
-# END OF DEFINE THE OAUTH PROVIDER AND SETTINGS TO USE #
+$oauth = Redux_oAuth::instance( $this );
+
+$oauth->set_config(
+	array(
+		'provider'        => 'Github',
+		'code'            => 'code',
+		'url_auth'        => 'https://github.com/login/oauth/authorize?',
+		'url_token'       => 'https://github.com/login/oauth/access_token?',
+		'url_user'        => 'https://api.github.com/user?',
+		'scope'           => 'user:email',
+		'get_oauth_token' => array(
+			'access_token' => 'access_token',
+			'json_decode'  => false,
+		),
+	)
+);
+
+return;
 
 // remember the user's last url so we can redirect them back to there after the login ends:
 if (!$_SESSION['WPOA']['LAST_URL']) {$_SESSION['WPOA']['LAST_URL'] = strtok($_SERVER['HTTP_REFERER'], "?");}
