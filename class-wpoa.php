@@ -136,9 +136,9 @@ if ( ! class_exists( 'WPOA' ) ) {
 			'wpoa_slack_api_enabled'                => 0,             // 0, 1
 			'wpoa_slack_api_id'                     => '',            // any string.
 			'wpoa_slack_api_secret'                 => '',            // any string.
-                        'wpoa_envato_api_enabled'               => 0,             // 0, 1
-                        'wpoa_envato_api_id'                    => '',            // any string.
-                        'wpoa_envato_api_secret'                => '',            // any string.
+			'wpoa_envato_api_enabled'               => 0,             // 0, 1
+			'wpoa_envato_api_id'                    => '',            // any string.
+			'wpoa_envato_api_secret'                => '',            // any string.
 			'wpoa_http_util'                        => 'curl',        // curl, stream-context.
 			'wpoa_http_util_verify_ssl'             => 1,             // 0, 1
 			'wpoa_restore_default_settings'         => 0,             // 0, 1
@@ -168,6 +168,8 @@ if ( ! class_exists( 'WPOA' ) ) {
 		 * Includes.
 		 */
 		private function includes() {
+			require_once self::$dir . 'inc/class-redux-oauth.php';
+
 			include_once self::$dir . 'inc/class-wpoa-login.php';
 			include_once self::$dir . 'inc/class-wpoa-logout.php';
 			include_once self::$dir . 'inc/class-wpoa-enqueue.php';

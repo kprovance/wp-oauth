@@ -1,20 +1,34 @@
 <?php
 
-// start the user session for maintaining individual user states during the multi-stage authentication flow:
-session_start();
+/**
+ * WP-OAuth Facbook config
+ *
+ * @package WP-OAuth
+ */
 
-# DEFINE THE OAUTH PROVIDER AND SETTINGS TO USE #
-$_SESSION['WPOA']['PROVIDER'] = 'Google';
-define('HTTP_UTIL', get_option('wpoa_http_util'));
-define('CLIENT_ENABLED', get_option('wpoa_google_api_enabled'));
-define('CLIENT_ID', get_option('wpoa_google_api_id'));
-define('CLIENT_SECRET', get_option('wpoa_google_api_secret'));
-define('REDIRECT_URI', rtrim(site_url(), '/') . '/');
-define('SCOPE', 'email'); // PROVIDER SPECIFIC: 'profile' is the minimum scope required to get the user's id from Google
-define('URL_AUTH', "https://accounts.google.com/o/oauth2/auth?");
-define('URL_TOKEN', "https://accounts.google.com/o/oauth2/token?");
-define('URL_USER', "https://www.googleapis.com/plus/v1/people/me?");
-# END OF DEFINE THE OAUTH PROVIDER AND SETTINGS TO USE #
+defined( 'ABSPATH' ) || exit;
+
+$oauth = Redux_oAuth::instance( $this );
+
+$oauth->set_config(
+	array(
+		'provider'        => 'Google',
+		'code'            => 'code',
+		'url_auth'        => 'https://accounts.google.com/o/oauth2/auth?',
+		'url_token'       => 'https://accounts.google.com/o/oauth2/token?',
+		'url_user'        => 'https://www.googleapis.com/plus/v1/people/me?',
+		'scope'           => 'email',
+		'get_oauth_token' => array(
+			'access_token' => 'access_token',
+			'expires_in'   => 'expires_in',
+			'json_decode'  => true,
+		),
+	)
+);
+
+$oauth->auth_flow();
+
+return;
 
 // remember the user's last url so we can redirect them back to there after the login ends:
 if (!$_SESSION['WPOA']['LAST_URL']) {
