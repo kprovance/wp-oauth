@@ -29,13 +29,16 @@ $oauth->set_config(
 );
 
 function slack_fix_oauth_identity( $oauth_identity ) {
+	$temp = array();
+	$temp = $oauth_identity;
 
-	echo 'callback';
-	print_r( $oauth_identity );
-	die;
-	return $oauth_identity;
+	$temp['id'] = $oauth_identity['user']['id'];
+	$temp['email'] = $oauth_identity['user']['email'];
+	$temp['name'] = $oauth_identity['user']['name'];
+
+	return $temp;
 }
 
-add_filter( 'WPOA_slack_fix_oauth_identity', 'slack_fix_oauth_identity' );
+add_filter( 'WPOA_Slack_fix_oauth_identity', 'slack_fix_oauth_identity' );
 
 $oauth->auth_flow();

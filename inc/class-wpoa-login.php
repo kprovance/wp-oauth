@@ -258,11 +258,7 @@ if ( ! class_exists( 'WPOA_Login' ) ) {
 
 			// try to find a matching WordPress user for the now-authenticated user's oauth identity.
 			$matched_user = $this->match_wordpress_user( $oauth_identity );
-echo 'bitch';
-print_r($oauth_identity['id']);
-echo '<br>';
-print_r($matched_user);
-die;
+
 			// handle the matched user if there is one.
 			if ( $matched_user ) {
 				$this->initiate_login( $matched_user );
