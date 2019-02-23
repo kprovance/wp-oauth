@@ -324,7 +324,8 @@ if ( ! class_exists( 'Redux_OAuth', false ) ) {
 			if ( has_action( $login_callback ) ) {
 				$result_obj = apply_filters( $login_callback, $result_obj );
 			}
-
+print_r($result_obj);
+			die;
 			// parse and return the user's oauth identity.
 			$oauth_identity             = $result_obj;
 			$oauth_identity['provider'] = $_SESSION['WPOA']['PROVIDER'];
