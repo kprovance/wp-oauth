@@ -19,8 +19,11 @@ $oauth->set_config(
 		'scope'           => 'identity.basic, identity.email',
 		'get_oauth_token' => array(
 			'access_token' => 'access_token',
-			'expires_in'   => 'expires_in',
+			'params_as_string' => true,
 			'json_decode'  => true,
+		),
+		'get_oauth_identity' => array(
+			'access_token' => 'token',
 		),
 	)
 );

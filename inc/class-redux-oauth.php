@@ -90,7 +90,7 @@ if ( ! class_exists( 'Redux_OAuth', false ) ) {
 						$oauth_identity = $this->get_oauth_identity();
 					}
 
-					if ( ! isset( $oauth_identity['id'] ) ) {
+					if ( ! isset( $oauth_identity['id'] ) && ! isset( $oauth_identity['user']['id'] ) ) {
 						WPOA::$login->end_login( 'Sorry, we couldn\'t log you in. User identity was not found. Please notify the admin or try again later.' );
 					}
 
@@ -222,6 +222,7 @@ if ( ! class_exists( 'Redux_OAuth', false ) ) {
 
 			if ( false === $post ) {
 				$result = wp_remote_get( $url, $args );
+
 			} else {
 				$result = wp_remote_post( $url, $args );
 			}
@@ -263,16 +264,17 @@ if ( ! class_exists( 'Redux_OAuth', false ) ) {
 			}
 
 			// process the result.
-			$access_token = $result_obj[ $this->config['get_oauth_token']['access_token'] ];
-			$expires_in   = $result_obj[ $this->config['get_oauth_token']['expires_in'] ];
+			$access_token = isset( $result_obj[ $this->config['get_oauth_token']['access_token'] ] ) ? $result_obj[ $this->config['get_oauth_token']['access_token'] ] : false;
+			$expires_in   = isset( $result_obj[ $this->config['get_oauth_token']['expires_in'] ] ) ? $result_obj[ $this->config['get_oauth_token']['expires_in'] ] : 5179152;
 
 			$refresh_token = '';
 
 			if ( isset( $this->config['get_oauth_token']['refresh_token'] ) && isset( $result_obj[ $this->config['get_oauth_token']['refresh_token'] ] ) ) {
-				$refresh_token = $result_obj[ $this->config['get_oauth_token']['refresh_token'] ];
+				$refresh_token = isset( $result_obj[ $this->config['get_oauth_token']['refresh_token'] ] ) ? $result_obj[ $this->config['get_oauth_token']['refresh_token'] ] : false;
 			}
 
 			$expires_at = time() + $expires_in;
+
 
 			// handle the result.
 			if ( ! $access_token || ! $expires_in ) {
@@ -295,6 +297,7 @@ if ( ! class_exists( 'Redux_OAuth', false ) ) {
 		 * @return array|mixed|object
 		 */
 		public function get_oauth_identity() {
+			$key_name = isset( $this->config['get_oauth_identity']['access_token'] ) ? $this->config['get_oauth_identity']['access_token'] : 'access_token';
 
 			// here we exchange the access token for the user info...
 			// set the access token param.
@@ -304,7 +307,7 @@ if ( ! class_exists( 'Redux_OAuth', false ) ) {
 				$params = $this->config['get_oauth_identity']['params'];
 			}
 
-			$params['access_token'] = $_SESSION['WPOA']['ACCESS_TOKEN'];
+			$params[$key_name] = $_SESSION['WPOA']['ACCESS_TOKEN'];
 
 			$url = $this->config['url_user'];
 
