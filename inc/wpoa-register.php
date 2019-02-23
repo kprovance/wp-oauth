@@ -9,11 +9,7 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-// TODO: very important that we sanitize all $_POST variables here before using them!
-// TODO: this doesn't call wpoa_end_login() which might result in the LAST_URL not being cleared...
-// ^--  No shit, Sherlock?  YA THINK??  Dimwit!!  I'll sanitize all this WPSC style soon...bitch!! - kp.
 global $wpdb;
-
 
 // initiate the user session.
 session_start();
