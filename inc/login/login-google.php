@@ -38,7 +38,6 @@ function google_fix_oauth_identity( $oauth_identity ) {
 
 	$temp['email'] = isset( $oauth_identity['emails'][0]['value'] ) ? $oauth_identity['emails'][0]['value'] : '';
 	$temp['name']  = isset( $oauth_identity['displayName'] ) ? $oauth_identity['displayName'] : '';
-	echo 'callback';
 
 	return $temp;
 }
