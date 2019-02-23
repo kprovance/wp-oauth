@@ -376,7 +376,7 @@ if ( ! class_exists( 'Redux_OAuth', false ) ) {
 
 			$url = $this->config['url_user'];
 
-			$result_obj = 'curl' === $this->config['http_util'] ? $this->curl( $params, $url ) : $this->stream( $params, $url );
+			$result_obj = $this->remote_post( $params, $url );
 			$result_obj = json_decode( $result_obj, true );
 
 			// parse and return the user's oauth identity.
