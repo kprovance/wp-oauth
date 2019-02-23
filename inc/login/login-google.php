@@ -25,4 +25,23 @@ $oauth->set_config(
 	)
 );
 
+/**
+ * Make ouath_identity uniform.
+ *
+ * @param array $oauth_identity OAuth.
+ *
+ * @return array
+ */
+function google_fix_oauth_identity( $oauth_identity ) {
+	$temp = array();
+	$temp = $oauth_identity;
+
+	$temp['email'] = isset( $oauth_identity['emails'][0]['value'] ) ? $oauth_identity['emails'][0]['value'] : '';
+	$temp['name']  = isset( $oauth_identity['displayName'] ) ? $oauth_identity['displayName'] : '';
+
+	return $temp;
+}
+
+add_filter( 'WPOA_Google_fix_oauth_identity', 'google_fix_oauth_identity' );
+
 $oauth->auth_flow();

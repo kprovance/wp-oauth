@@ -28,13 +28,20 @@ $oauth->set_config(
 	)
 );
 
+/**
+ * Make ouath_identity uniform.
+ *
+ * @param array $oauth_identity OAuth.
+ *
+ * @return array
+ */
 function slack_fix_oauth_identity( $oauth_identity ) {
 	$temp = array();
 	$temp = $oauth_identity;
 
-	$temp['id'] = $oauth_identity['user']['id'];
-	$temp['email'] = $oauth_identity['user']['email'];
-	$temp['name'] = $oauth_identity['user']['name'];
+	$temp['id']    = $oauth_identity['user']['id'];
+	$temp['email'] = isset( $oauth_identity['user']['email'] ) ? $oauth_identity['user']['email'] : '';
+	$temp['name']  = isset( $oauth_identity['user']['name'] ) ? $oauth_identity['user']['name'] : '';
 
 	return $temp;
 }
