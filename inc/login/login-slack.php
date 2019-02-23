@@ -1,34 +1,33 @@
 <?php
+/**
+ * WP-OAuth Slack config
+ *
+ * @package WP-OAuth
+ */
 
-// start the user session for maintaining individual user states during the multi-stage authentication flow:
-if (!isset($_SESSION)) {
-	session_start();
-}
+defined( 'ABSPATH' ) || exit;
 
-# DEFINE THE OAUTH PROVIDER AND SETTINGS TO USE #
-$_SESSION['WPOA']['PROVIDER'] = 'Slack';
-define('HTTP_UTIL', get_option('wpoa_http_util'));
-define('CLIENT_ENABLED', get_option('wpoa_slack_api_enabled'));
-define('CLIENT_ID', get_option('wpoa_slack_api_id'));
-define('CLIENT_SECRET', get_option('wpoa_slack_api_secret'));
-define('REDIRECT_URI', rtrim(site_url(), '/') . '/');
-define('SCOPE', 'identity.basic, identity.email'); // PROVIDER SPECIFIC: 'profile' is the minimum scope required to get the user's id from Google
-define('URL_AUTH', "https://slack.com/oauth/authorize?");
-define('URL_TOKEN', "https://slack.com/api/oauth.access?");
-define('URL_USER', "https://slack.com/api/users.identity?");
-# END OF DEFINE THE OAUTH PROVIDER AND SETTINGS TO USE #
+$oauth = Redux_oAuth::instance( $this );
 
-// remember the user's last url so we can redirect them back to there after the login ends:
-if (!$_SESSION['WPOA']['LAST_URL']) {
-	// try to obtain the redirect_url from the default login page:
-	$redirect_url = esc_url($_GET['redirect_to']);
-	// if no redirect_url was found, set it to the user's last page:
-	if (!$redirect_url) {
-		$redirect_url = strtok($_SERVER['HTTP_REFERER'], "?");
-	}
-	// set the user's last page so we can return that user there after they login:
-	$_SESSION['WPOA']['LAST_URL'] = $redirect_url;
-}
+$oauth->set_config(
+	array(
+		'provider'        => 'Slack',
+		'code'            => 'code',
+		'url_auth'        => 'https://slack.com/oauth/authorize?',
+		'url_token'       => 'https://slack.com/api/oauth.access?',
+		'url_user'        => 'https://slack.com/api/users.identity?',
+		'scope'           => 'identity.basic, identity.email',
+		'get_oauth_token' => array(
+			'access_token' => 'access_token',
+			'expires_in'   => 'expires_in',
+			'json_decode'  => true,
+		),
+	)
+);
+
+$oauth->auth_flow();
+
+return;
 
 # AUTHENTICATION FLOW #
 // the oauth 2.0 authentication flow will start in this script and make several calls to the third-party authentication provider which in turn will make callbacks to this script that we continue to handle until the login completes with a success or failure:
