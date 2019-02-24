@@ -46,6 +46,6 @@ function slack_fix_oauth_identity( $oauth_identity ) {
 	return $temp;
 }
 
-add_filter( 'WPOA_Slack_fix_oauth_identity', 'slack_fix_oauth_identity' );
+add_filter( 'WPOA_slack_fix_oauth_identity', 'slack_fix_oauth_identity' );
 
 $oauth->auth_flow();
