@@ -28,6 +28,30 @@ $oauth->set_config(
 	)
 );
 
+/**
+ * Make ouath_identity uniform.
+ *
+ * @param array $oauth_identity OAuth.
+ *
+ * @return array
+ */
+function linkedin_fix_oauth_identity( $oauth_identity ) {
+	$temp = array();
+	$temp = $oauth_identity;
+
+	$temp['id']    = $oauth_identity['id'];
+	$temp['email'] = $oauth_identity['emailAddress'];
+	$temp['name']  = $oauth_identity['firstName'] . ' ' . $oauth_identity['lastName'];
+
+	return $temp;
+}
+
+add_filter( 'WPOA_linkedin_fix_oauth_identity', 'linkedin_fix_oauth_identity' );
+
+$oauth->auth_flow();
+
+return;
+
 # DEFINE THE OAUTH PROVIDER AND SETTINGS TO USE #
 $_SESSION['WPOA']['PROVIDER'] = 'LinkedIn';
 define('HTTP_UTIL', get_option('wpoa_http_util'));
