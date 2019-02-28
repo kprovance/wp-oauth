@@ -195,6 +195,8 @@ if ( ! class_exists( 'Redux_OAuth', false ) ) {
 				unset( $params['access_token'] );
 			}
 
+			$headr = isset( $this->config['get_oauth_identity']['header'] ) ? $this->config['get_oauth_identity']['header'] : $headr;
+
 			if ( is_array( $params ) && count( $params ) ) {
 				$url_params = http_build_query( $params );
 				$url        = $url . $url_params;

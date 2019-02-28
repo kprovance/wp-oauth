@@ -24,6 +24,7 @@ $oauth->set_config(
 		),
 		'get_oauth_identity' => array(
 			'access_token' => 'oauth2_access_token',
+			'header'       => 'x-li-format: json',
 		),
 	)
 );
