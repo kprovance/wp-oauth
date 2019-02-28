@@ -65,21 +65,21 @@ if ( ! class_exists( 'Redux_OAuth', false ) ) {
 
 				// Do not proceed if id or secret is null.
 				WPOA::$login->end_login( 'This third-party authentication provider has not been configured with an API key/secret. Please notify the admin or try again later.' );
-			} elseif ( isset( $_GET['error_description'] ) ) {
+			} elseif ( isset( $_GET['error_description'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 
 				// do not proceed if an error was detected.
-				WPOA::$login->end_login( sanitize_text_field( wp_unslash( $_GET['error_description'] ) ) ); // WPCS: CSRF ok.
-			} elseif ( isset( $_GET['error_message'] ) ) {
+				WPOA::$login->end_login( sanitize_text_field( wp_unslash( $_GET['error_description'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification
+			} elseif ( isset( $_GET['error_message'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 
 				// do not proceed if an error was detected.
-				WPOA::$login->end_login( sanitize_text_field( wp_unslash( $_GET['error_message'] ) ) ); // WPCS: CSRF ok.
-			} elseif ( isset( $_GET['code'] ) ) { // WPCS: CSRF ok.
+				WPOA::$login->end_login( sanitize_text_field( wp_unslash( $_GET['error_message'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification
+			} elseif ( isset( $_GET['code'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 
 				// post-auth phase, verify the state.
-				if ( isset( $_GET['state'] ) && $_GET['state'] === $_SESSION['WPOA']['STATE'] ) { // WPCS: CSRF ok.
+				if ( isset( $_GET['state'] ) && $_GET['state'] === $_SESSION['WPOA']['STATE'] ) { // phpcs:ignore WordPress.Security.NonceVerification
 
 					// get an access token from the third party provider.
-					$this->get_oauth_token( sanitize_text_field( wp_unslash( $_GET['code'] ) ) ); // WPCS: CSRF ok.
+					$this->get_oauth_token( sanitize_text_field( wp_unslash( $_GET['code'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification
 
 					// get the user's third-party identity and attempt to login/register a matching WordPress user account.
 					$login_callback = 'WPOA_' . $this->config['provider'] . '_get_oauth_identity';
