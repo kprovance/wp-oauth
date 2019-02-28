@@ -947,6 +947,66 @@ $cc_ux       = wpoa_cc_ux();
 				</div> <!-- .wpoa-settings-section -->
 				<!-- END Login with Facebook section -->
 
+				<!-- START Login with Twitter section -->
+				<!-- 
+				<div id="wpoa-settings-section-login-with-twitter" class="wpoa-settings-section">
+					<h3>Login with Twitter</h3>
+					<div class='form-padding'>
+						<table class='form-table'>
+							<tr valign='top'>
+								<th scope='row'>Enabled:</th>
+								<td>
+									<input
+											type='checkbox'
+											name='wpoa_twitter_api_enabled'
+											value='1'
+										<?php // checked( get_option( 'wpoa_twitter_api_enabled' ) === '1' ); ?>
+									/>
+								</td>
+							</tr>
+
+							<tr valign='top'>
+								<th scope='row'>Key:</th>
+								<td>
+									<input
+											type='text'
+											name='wpoa_twitter_api_id'
+											value='<?php // echo esc_attr( get_option( 'wpoa_twitter_api_id' ) ); ?>'
+									/>
+								</td>
+							</tr>
+							<tr valign='top'>
+								<th scope='row'>Secret:</th>
+								<td>
+									<input
+											type='text'
+											name='wpoa_twitter_api_secret'
+											value='<?php // echo esc_attr( get_option( 'wpoa_twitter_api_secret' ) ); ?>'
+									/>
+								</td>
+							</tr>
+						</table> <!-- .form-table -->
+<!--
+						<p>
+							<strong>Instructions:</strong>
+						</p>
+						<ol>
+							<li>Visit the Twitter website for developers <a
+										href='https://build.envato.com/my-apps/project' target="_blank">https://build.envato.com/my-apps/</a>.
+							</li>
+							<li>Enter the app name and Envato permissions, including email and username.</li>
+							<li>Paste your Client ID/Secret provided by Envato into the fields above, then click the Save all settings button.</li>
+						</ol>
+						<strong>References:</strong>
+						<ul>
+							<li><a href='https://build.envato.com/api/#oauth' target='_blank'>Envato OAuth
+									Reference</a></li>
+						</ul>
+						<?php // submit_button( 'Save all settings' ); ?>
+					</div> <!-- .form-padding -->
+				</div> <!-- .wpoa-settings-section -->
+				<!-- END Login with Twitter section -->
+
 				<!-- START Login with LinkedIn section -->
 				<div id="wpoa-settings-section-login-with-linkedin" class="wpoa-settings-section">
 					<h3>Login with LinkedIn</h3>

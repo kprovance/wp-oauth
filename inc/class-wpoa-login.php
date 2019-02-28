@@ -174,6 +174,7 @@ if ( ! class_exists( 'WPOA_Login' ) ) {
 			$html .= $this->login_button( 'slack', 'Slack', $atts );
 			$html .= $this->login_button( 'envato', 'Envato', $atts );
 			$html .= $this->login_button( 'facebook', 'Facebook', $atts );
+			// $html .= $this->login_button( 'twitter', 'Twitter', $atts );
 			$html .= $this->login_button( 'linkedin', 'LinkedIn', $atts );
 			$html .= $this->login_button( 'github', 'GitHub', $atts );
 			$html .= $this->login_button( 'reddit', 'Reddit', $atts );

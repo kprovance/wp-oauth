@@ -27,8 +27,6 @@ $oauth->set_config(
 	)
 );
 
-
-
 /**
  * We need extra calls to construct the identitity.
  *
