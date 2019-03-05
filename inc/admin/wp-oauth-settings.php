@@ -1004,7 +1004,7 @@ $cc_ux       = wpoa_cc_ux();
 						</ul>
 						<?php // submit_button( 'Save all settings' ); ?>
 					</div> <!-- .form-padding -->
-				</div> <!-- .wpoa-settings-section -->
+				<!-- </div> <!-- .wpoa-settings-section -->
 				<!-- END Login with Twitter section -->
 
 				<!-- START Login with LinkedIn section -->

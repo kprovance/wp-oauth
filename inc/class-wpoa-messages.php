@@ -34,10 +34,12 @@ if ( ! class_exists( 'WPOA_Messages' ) ) {
 		 * Pushes login messages into the dom where they can be extracted by javascript
 		 */
 		public function push_login_messages() {
-			$result                     = $_SESSION['WPOA']['RESULT'];
-			$_SESSION['WPOA']['RESULT'] = '';
+			if ( isset( $_SESSION['WPOA'] ) ) {
+				$result                     = $_SESSION['WPOA']['RESULT'];
+				$_SESSION['WPOA']['RESULT'] = '';
 
-			echo '<div id="wpoa-result">' . esc_html( $result ) . '</div>';
+				echo '<div id="wpoa-result">' . esc_html( $result ) . '</div>';
+			}
 		}
 	}
 
