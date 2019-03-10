@@ -100,7 +100,7 @@
 		$( '#wpoa-login-form-edit' ).click(
 			function() {
 				var designName = $( '#wpoa-login-form-design :selected' ).text();
-				var formDesign = $( '[name=wpoa_login_formDesign]' ).val();
+				var formDesign = $( '[name=wpoa_login_form_designs]' ).val();
 				var designs;
 				var design;
 
@@ -112,7 +112,7 @@
 
 					// Pull the design into the form fields for editing.
 					// TODO: don't hard code these, we want to add new fields in the future without having to update this function...
-					$( '[name=wpoa_login_form_designName]' ).val( designName );
+					$( '[name=wpoa_login_form_design_name]' ).val( designName );
 					$( '[name=wpoa_login_form_icon_set]' ).val( design.icon_set );
 					$( '[name=wpoa_login_form_show_login]' ).val( design.show_login );
 					$( '[name=wpoa_login_form_show_logout]' ).val( design.show_logout );
@@ -139,7 +139,7 @@
 				var oldDesignName;
 
 				// Get the designs.
-				var formDesign = $( '[name=wpoa_login_formDesign]' ).val();
+				var formDesign = $( '[name=wpoa_login_form_designs]' ).val();
 
 				formDesign = decodeURIComponent( formDesign );
 				designs    = JSON.parse( formDesign );
@@ -151,7 +151,7 @@
 				delete designs[oldDesignName];
 
 				// Update the designs array for POST.
-				$( '[name=wpoa_login_formDesign]' ).val( encodeURIComponent( JSON.stringify( designs ) ) );
+				$( '[name=wpoa_login_form_designs]' ).val( encodeURIComponent( JSON.stringify( designs ) ) );
 			}
 		);
 
@@ -161,7 +161,7 @@
 
 				// Applies changes to the current design by updating the designs array stored as JSON in a hidden form field...
 				// Get the design name being proposed.
-				var new_designName    = $( '[name=wpoa_login_form_designName]' ).val();
+				var newDesignName    = $( '[name=wpoa_login_form_design_name]' ).val();
 				var validationWarning = '';
 				var formDesign;
 				var designs;
@@ -183,7 +183,7 @@
 
 					// NEW DESIGN, add it...
 					// Make sure the design name doesn't already exist.
-					if ( -1 !== $( '#wpoa-login-form-design option' ).text().indexOf( new_designName ) ) {
+					if ( -1 !== $( '#wpoa-login-form-design option' ).text().indexOf( newDesignName ) ) {
 
 						// Design name already exists, notify the user and abort.
 						validationWarning = '<p id="validation-warning" class="validation-warning">Design name already exists! Please choose a different name.</span>';
@@ -193,39 +193,39 @@
 					} else {
 
 						// Get the designs array which contains all of our designs.
-						formDesign = $( '[name=wpoa_login_formDesign]' ).val();
+						formDesign = $( '[name=wpoa_login_form_designs]' ).val();
 						formDesign = decodeURIComponent( formDesign );
 						designs    = JSON.parse( formDesign );
 
 						// Add a design to the designs array.
 						// TODO: don't hard code these, we want to add new fields in the future without having to update this function...
-						designs[new_designName]                  = {};
-						designs[new_designName].icon_set         = $( '[name=wpoa_login_form_icon_set]' ).val();
-						designs[new_designName].show_login       = $( '[name=wpoa_login_form_show_login]' ).val();
-						designs[new_designName].show_logout      = $( '[name=wpoa_login_form_show_logout]' ).val();
-						designs[new_designName].layout           = $( '[name=wpoa_login_form_layout]' ).val();
-						designs[new_designName].button_prefix    = $( '[name=wpoa_login_form_button_prefix]' ).val();
-						designs[new_designName].logged_out_title = $(
+						designs[newDesignName]                  = {};
+						designs[newDesignName].icon_set         = $( '[name=wpoa_login_form_icon_set]' ).val();
+						designs[newDesignName].show_login       = $( '[name=wpoa_login_form_show_login]' ).val();
+						designs[newDesignName].show_logout      = $( '[name=wpoa_login_form_show_logout]' ).val();
+						designs[newDesignName].layout           = $( '[name=wpoa_login_form_layout]' ).val();
+						designs[newDesignName].button_prefix    = $( '[name=wpoa_login_form_button_prefix]' ).val();
+						designs[newDesignName].logged_out_title = $(
 							'[name=wpoa_login_form_logged_out_title]'
 						).val();
 
-						designs[new_designName].logged_in_title = $( '[name=wpoa_login_form_logged_in_title]' ).val();
-						designs[new_designName].loggingInTitle  = $(
+						designs[newDesignName].logged_in_title = $( '[name=wpoa_login_form_logged_in_title]' ).val();
+						designs[newDesignName].loggingInTitle  = $(
 							'[name=wpoa_login_form_loggingInTitle]'
 						).val();
 
-						designs[new_designName].loggingOutTitle = $(
+						designs[newDesignName].loggingOutTitle = $(
 							'[name=wpoa_login_form_loggingOutTitle]'
 						).val();
 
 						// Update the select box to include this new design.
 						$( '#wpoa-login-form-design' ).append(
-							$( '<option></option>' ).text( new_designName ).attr( 'selected', 'selected' )
+							$( '<option></option>' ).text( newDesignName ).attr( 'selected', 'selected' )
 						);
 
 						// Select the design in the selector.
 						// update the designs array for POST.
-						$( '[name=wpoa_login_formDesign]' ).val( encodeURIComponent( JSON.stringify( designs ) ) );
+						$( '[name=wpoa_login_form_designs]' ).val( encodeURIComponent( JSON.stringify( designs ) ) );
 
 						// Hide the design editor and show the select box.
 						$( '#wpoa-login-form-design' ).parents( 'tr' ).show();
@@ -235,7 +235,7 @@
 
 					// MODIFIED DESIGN, add it and remove the old one...
 					// Get the designs array which contains all of our designs.
-					formDesign = $( '[name=wpoa_login_formDesign]' ).val();
+					formDesign = $( '[name=wpoa_login_form_designs]' ).val();
 					formDesign = decodeURIComponent( formDesign );
 					designs    = JSON.parse( formDesign );
 
@@ -247,24 +247,24 @@
 
 					// Add the modified design.
 					// TODO: don't hard code these, we want to add new fields in the future without having to update this function...
-					designs[new_designName]                  = {};
-					designs[new_designName].icon_set         = $( '[name=wpoa_login_form_icon_set]' ).val();
-					designs[new_designName].show_login       = $( '[name=wpoa_login_form_show_login]' ).val();
-					designs[new_designName].show_logout      = $( '[name=wpoa_login_form_show_logout]' ).val();
-					designs[new_designName].layout           = $( '[name=wpoa_login_form_layout]' ).val();
-					designs[new_designName].button_prefix    = $( '[name=wpoa_login_form_button_prefix]' ).val();
-					designs[new_designName].logged_out_title = $( '[name=wpoa_login_form_logged_out_title]' ).val();
-					designs[new_designName].logged_in_title  = $( '[name=wpoa_login_form_logged_in_title]' ).val();
-					designs[new_designName].loggingInTitle   = $( '[name=wpoa_login_form_loggingInTitle]' ).val();
-					designs[new_designName].loggingOutTitle  = $( '[name=wpoa_login_form_loggingOutTitle]' ).val();
+					designs[newDesignName]                  = {};
+					designs[newDesignName].icon_set         = $( '[name=wpoa_login_form_icon_set]' ).val();
+					designs[newDesignName].show_login       = $( '[name=wpoa_login_form_show_login]' ).val();
+					designs[newDesignName].show_logout      = $( '[name=wpoa_login_form_show_logout]' ).val();
+					designs[newDesignName].layout           = $( '[name=wpoa_login_form_layout]' ).val();
+					designs[newDesignName].button_prefix    = $( '[name=wpoa_login_form_button_prefix]' ).val();
+					designs[newDesignName].logged_out_title = $( '[name=wpoa_login_form_logged_out_title]' ).val();
+					designs[newDesignName].logged_in_title  = $( '[name=wpoa_login_form_logged_in_title]' ).val();
+					designs[newDesignName].loggingInTitle   = $( '[name=wpoa_login_form_loggingInTitle]' ).val();
+					designs[newDesignName].loggingOutTitle  = $( '[name=wpoa_login_form_loggingOutTitle]' ).val();
 
 					// Update the select box to include this new design.
 					$( '#wpoa-login-form-design' ).append(
-						$( '<option></option>' ).text( new_designName ).attr( 'selected', 'selected' )
+						$( '<option></option>' ).text( newDesignName ).attr( 'selected', 'selected' )
 					);
 
 					// Update the designs array for POST.
-					$( '[name=wpoa_login_formDesign]' ).val( encodeURIComponent( JSON.stringify( designs ) ) );
+					$( '[name=wpoa_login_form_designs]' ).val( encodeURIComponent( JSON.stringify( designs ) ) );
 
 					// Hide the design editor and show the design selector.
 					$( '#wpoa-login-form-design' ).parents( 'tr' ).show();
