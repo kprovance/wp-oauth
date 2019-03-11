@@ -262,7 +262,7 @@ if ( ! class_exists( 'WPOA' ) ) {
 			$settings_link = "<a href='options-general.php?page=WP-OAuth.php'>Settings Page</a>"; // CASE SeNsItIvE filename!
 			?>
 			<div class="updated">
-				<p>WP-OAuth has been updated! Please review the <?php echo $settings_link; // WPCS: XSS ok. ?>.</p>
+				<p>WP-OAuth has been updated! Please review the <?php echo $settings_link; // phpcs:ignore WordPress.Security.EscapeOutput ?>.</p>
 			</div>
 			<?php
 		}
@@ -292,7 +292,7 @@ if ( ! class_exists( 'WPOA' ) ) {
 
 			?>
 			<div class="updated">
-				<p>The default settings have been restored. You may review the <?php echo $settings_link; // WPCS: XSS ok. ?>.</p>
+				<p>The default settings have been restored. You may review the <?php echo $settings_link; //  phpcs:ignore WordPress.Security.EscapeOutput ?>.</p>
 			</div>
 			<?php
 		}

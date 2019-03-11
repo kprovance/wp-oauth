@@ -153,7 +153,7 @@ if ( ! class_exists( 'WPOA_Login' ) ) {
 
 			// Generate the atts once (cache them), so we can use it for all buttons without computing them each time.
 			$site_url    = get_bloginfo( 'url' );
-			$redirect_to = isset( $_GET['redirect_to'] ) ? rawurlencode( sanitize_text_field( wp_unslash( $_GET['redirect_to'] ) ) ) : ''; // WPCS: CSRF ok.
+			$redirect_to = isset( $_GET['redirect_to'] ) ? rawurlencode( sanitize_text_field( wp_unslash( $_GET['redirect_to'] ) ) ) : ''; //  phpcs:ignore WordPress.Security.NonceVerification
 
 			if ( '' !== $redirect_to ) {
 				$redirect_to = '&redirect_to=' . $redirect_to;
@@ -177,7 +177,6 @@ if ( ! class_exists( 'WPOA_Login' ) ) {
 			$html .= $this->login_button( 'github', 'GitHub', $atts );
 			$html .= $this->login_button( 'envato', 'Envato', $atts );
 			$html .= $this->login_button( 'slack', 'Slack', $atts );
-			// $html .= $this->login_button( 'twitter', 'Twitter', $atts );
 			$html .= $this->login_button( 'linkedin', 'LinkedIn', $atts );
 			$html .= $this->login_button( 'reddit', 'Reddit', $atts );
 			$html .= $this->login_button( 'windowslive', 'Windows Live', $atts );
@@ -361,25 +360,31 @@ if ( ! class_exists( 'WPOA_Login' ) ) {
 
 			$redirect_url = '';
 
-			switch ( $redirect_method ) {
-				case 'home_page':
-					$redirect_url = site_url();
-					break;
-				case 'last_page':
-					$redirect_url = $last_url;
-					break;
-				case 'specific_page':
-					$redirect_url = get_permalink( get_option( 'wpoa_login_redirect_page' ) );
-					break;
-				case 'admin_dashboard':
-					$redirect_url = admin_url();
-					break;
-				case 'user_profile':
-					$redirect_url = get_edit_user_link();
-					break;
-				case 'custom_url':
-					$redirect_url = get_option( 'wpoa_login_redirect_url' );
-					break;
+			$redirect_override = apply_filter( 'wpoa_login_redirect_override', WPOA::$current_design, $last_url );
+
+			if ( '' === $redirect_override ) {
+				switch ( $redirect_method ) {
+					case 'home_page':
+						$redirect_url = site_url();
+						break;
+					case 'last_page':
+						$redirect_url = $last_url;
+						break;
+					case 'specific_page':
+						$redirect_url = get_permalink( get_option( 'wpoa_login_redirect_page' ) );
+						break;
+					case 'admin_dashboard':
+						$redirect_url = admin_url();
+						break;
+					case 'user_profile':
+						$redirect_url = get_edit_user_link();
+						break;
+					case 'custom_url':
+						$redirect_url = get_option( 'wpoa_login_redirect_url' );
+						break;
+				}
+			} else {
+				$redirect_url = $redirect_override;
 			}
 
 			wp_safe_redirect( $redirect_url );
