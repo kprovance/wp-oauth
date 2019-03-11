@@ -60,7 +60,7 @@ if ( ! class_exists( 'WPOA_Shortcodes' ) ) {
 			if ( 0 === count( $query_result ) ) {
 				$html .= "<p>You currently don't have any accounts linked.</p>";
 				$html .= '<p>To get the most out of this site, please link any of the following accounts below.</p>';
-				$html .= '<p>You will not be able to continue to your profile until you\'ve authenticated to Redux.io</p>>';
+				$html .= '<p><strong>You will not be able to continue to your profile until you\'ve authenticated to Redux.io</strong></p>';
 			}
 
 			$html .= "<div class='wpoa-linked-accounts'>";
