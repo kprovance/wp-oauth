@@ -363,7 +363,7 @@ if ( ! class_exists( 'WPOA_Login' ) ) {
 			$user_id = $current_user->ID;
 
 			// Get the wpoa_identity records.
-			$query_result = $wpdb->get_results( "SELECT * FROM $wpdb->usermeta WHERE $user_id = $usermeta$wpdb->usermeta_table.user_id AND $wpdb->usermeta.meta_key = 'wpoa_identity'" );
+			$query_string = "SELECT * FROM $wpdb->usermeta WHERE $user_id = $wpdb->usermeta.user_id AND $wpdb->usermeta.meta_key = 'wpoa_identity'";
 
 			$accounts = array();
 			foreach ( $query_result as $item ) {
