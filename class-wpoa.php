@@ -39,6 +39,13 @@ if ( ! class_exists( 'WPOA' ) ) {
 		public static $url = '';
 
 		/**
+		 * Current deesign template.
+		 *
+		 * @var string
+		 */
+		public static $current_design = '';
+
+		/**
 		 * Login class.
 		 *
 		 * @var null
