@@ -171,18 +171,14 @@ if ( ! class_exists( 'WPOA_Login' ) ) {
 
 			// Generate the login buttons for available providers.
 			// TODO: don't hard-code the buttons/providers here, we want to be able to add more providers without having to update this function...
-			$html  = '';
-			$html .= $this->login_button( 'facebook', 'Facebook', $atts );
-			$html .= $this->login_button( 'google', 'Google', $atts );
-			$html .= $this->login_button( 'github', 'GitHub', $atts );
-			$html .= $this->login_button( 'envato', 'Envato', $atts );
-			$html .= $this->login_button( 'slack', 'Slack', $atts );
-			$html .= $this->login_button( 'linkedin', 'LinkedIn', $atts );
-			$html .= $this->login_button( 'reddit', 'Reddit', $atts );
-			$html .= $this->login_button( 'windowslive', 'Windows Live', $atts );
-			$html .= $this->login_button( 'paypal', 'PayPal', $atts );
-			$html .= $this->login_button( 'instagram', 'Instagram', $atts );
-			$html .= $this->login_button( 'battlenet', 'Battlenet', $atts );
+			$services = WPOA::get_services();
+
+			$html = '';
+			foreach ( $services as $key => $title ) {
+				if ( isset( $_SESSION['WPOA']['accounts'] ) && ! isset( $_SESSION['WPOA']['accounts'][ $key ] ) ) {
+					$html .= $this->wpoa_login_button( $key, $title, $atts );
+				}
+			}
 
 			if ( '' === $html ) {
 				$html .= 'Sorry, no login providers have been enabled.';
@@ -349,6 +345,9 @@ if ( ! class_exists( 'WPOA_Login' ) ) {
 		 * @param string $msg Message.
 		 */
 		public function end_login( $msg ) {
+			global $current_user;
+			global $wpdb;
+
 			$last_url = $_SESSION['WPOA']['LAST_URL'];
 
 			unset( $_SESSION['WPOA']['LAST_URL'] );
@@ -359,6 +358,20 @@ if ( ! class_exists( 'WPOA_Login' ) ) {
 			$redirect_method = get_option( 'wpoa_login_redirect' );
 
 			$redirect_url = '';
+
+			wp_get_current_user();
+			$user_id = $current_user->ID;
+
+			// Get the wpoa_identity records.
+			$query_result = $wpdb->get_results( "SELECT * FROM $wpdb->usermeta WHERE $user_id = $usermeta$wpdb->usermeta_table.user_id AND $wpdb->usermeta.meta_key = 'wpoa_identity'" );
+
+			$accounts = array();
+			foreach ( $query_result as $item ) {
+				$parts                               = explode( '|', $item->meta_value );
+				$accounts[ strtolower( $parts[0] ) ] = $parts[1];
+			}
+
+			$_SESSION['WPOA']['accounts'] = $accounts;
 
 			$redirect_override = apply_filters( 'wpoa_login_redirect_override', $_SESSION['WPOA']['DESIGN'], $last_url );
 
