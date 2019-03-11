@@ -393,5 +393,26 @@ if ( ! class_exists( 'WPOA' ) ) {
 
 			return $url;
 		}
+
+		/**
+		 * Get list of supported services.
+		 *
+		 * @return array
+		 */
+		public static function get_services() {
+			return array(
+				'google'      => 'Google',
+				'facebook'    => 'Facebook',
+				'linkedin'    => 'LinkedIn',
+				'github'      => 'GitHub',
+				'reddit'      => 'Reddit',
+				'windowslive' => 'Windows Live',
+				'paypal'      => 'PayPal',
+				'instagram'   => 'Instagram',
+				'battlenet'   => 'Battlenet',
+				'envato'      => 'Envato',
+				'slack'       => 'Slack',
+			);
+		}
 	}
 }
