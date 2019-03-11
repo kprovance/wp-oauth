@@ -34,6 +34,8 @@ if ( ! class_exists( 'WPOA_Login' ) ) {
 			// Even though wpoa_login_form() will pass a default, we might call this function from another method so it's important to re-specify the default values.
 			// If a design was specified and that design exists, load the shortcode attributes from that design.
 			if ( '' !== $design && $this->login_form_design_exists( $design ) ) { // TODO: remove first condition not needed.
+				WPOA::$current_design = $design;
+
 				$a                 = $this->get_login_form_design( $design );
 				$icon_set          = $a['icon_set'];
 				$layout            = $a['layout'];

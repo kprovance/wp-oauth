@@ -39,6 +39,13 @@ if ( ! class_exists( 'WPOA' ) ) {
 		public static $url = '';
 
 		/**
+		 * Current deesign template.
+		 *
+		 * @var string
+		 */
+		public static $current_design = '';
+
+		/**
 		 * Login class.
 		 *
 		 * @var null
@@ -232,24 +239,6 @@ if ( ! class_exists( 'WPOA' ) ) {
 				add_action( 'admin_notices', array( $this, 'wpoa_update_notice' ) );
 			}
 		}
-
-        function get_services() {
-            return array(
-                'google'      => 'Google',
-                'facebook'    => 'Facebook',
-                'linkedin'    => 'LinkedIn',
-                'byu'         => 'BYU',
-                'github'      => 'GitHub',
-                'reddit'      => 'Reddit',
-                'windowslive' => 'Windows Live',
-                'paypal'      => 'PayPal',
-                'instagram'   => 'Instagram',
-                'battlenet'   => 'Battlenet',
-                'google'      => 'Google',
-                'google'      => 'Google',
-                'google'      => 'Google',
-            );
-        }
 
 		/**
 		 * Adds any missing settings and their default values:
