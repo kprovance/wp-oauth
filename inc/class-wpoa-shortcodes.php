@@ -51,7 +51,7 @@ if ( ! class_exists( 'WPOA_Shortcodes' ) ) {
 			// List the wpoa_identity records.
 			$html  = '<div id="wpoa-linked-accounts">';
 			$html .= '<h3>Linked Accounts</h3>';
-			$html .= '<p>Manage the linked accounts which you have previously authorized to be used for logging into this website.</p>';
+			$html .= '<p>Manage linked accounts to be used for logging into this website.</p>';
 			$html .= '<table class="form-table">';
 			$html .= '<tr valign="top">';
 			$html .= '<th scope="row">Your Linked Providers</th>';
