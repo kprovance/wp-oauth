@@ -176,7 +176,7 @@ if ( ! class_exists( 'WPOA_Login' ) ) {
 			$html = '';
 			foreach ( $services as $key => $title ) {
 				if ( isset( $_SESSION['WPOA']['accounts'] ) && ! isset( $_SESSION['WPOA']['accounts'][ $key ] ) ) {
-					$html .= $this->wpoa_login_button( $key, $title, $atts );
+					$html .= $this->login_button( $key, $title, $atts );
 				}
 			}
 
