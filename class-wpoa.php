@@ -233,6 +233,24 @@ if ( ! class_exists( 'WPOA' ) ) {
 			}
 		}
 
+        function get_services() {
+            return array(
+                'google'      => 'Google',
+                'facebook'    => 'Facebook',
+                'linkedin'    => 'LinkedIn',
+                'byu'         => 'BYU',
+                'github'      => 'GitHub',
+                'reddit'      => 'Reddit',
+                'windowslive' => 'Windows Live',
+                'paypal'      => 'PayPal',
+                'instagram'   => 'Instagram',
+                'battlenet'   => 'Battlenet',
+                'google'      => 'Google',
+                'google'      => 'Google',
+                'google'      => 'Google',
+            );
+        }
+
 		/**
 		 * Adds any missing settings and their default values:
 		 */
