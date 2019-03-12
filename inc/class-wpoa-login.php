@@ -276,7 +276,7 @@ if ( ! class_exists( 'WPOA_Login' ) ) {
 				if ( '1' === get_option( 'wpoa_email_notify_link' ) ) {
 					$message = $current_user->user_login . ' linked ' . $_SESSION['WPOA']['PROVIDER'] . ' to their account.' . "\n\n" . 'Linked Username: ' . $oauth_identity['name'] . "\n\n" . 'Linked Email: ' . $oauth_identity['email'];
 
-					$x = wp_mail( WPOA::$admin_email, '[' . get_option( 'blogname' )'] Linked Account', $message );
+					$x = wp_mail( WPOA::$admin_email, '[' . get_option( 'blogname' ) . '] Linked Account', $message );
 				}
 
 				// after linking the account, redirect user to their last url.
