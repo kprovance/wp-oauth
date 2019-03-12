@@ -172,12 +172,11 @@ if ( ! class_exists( 'WPOA_Login' ) ) {
 			// Generate the login buttons for available providers.
 			// TODO: don't hard-code the buttons/providers here, we want to be able to add more providers without having to update this function...
 			$services = WPOA::get_services();
-
 			$html = '';
 			foreach ( $services as $key => $title ) {
-				if ( isset( $_SESSION['WPOA']['accounts'] ) && ! isset( $_SESSION['WPOA']['accounts'][ $key ] ) ) {
+				//if ( isset( $_SESSION['WPOA']['accounts'] ) && ! isset( $_SESSION['WPOA']['accounts'][ $key ] ) ) {
 					$html .= $this->login_button( $key, $title, $atts );
-				}
+				//}
 			}
 
 			if ( '' === $html ) {
