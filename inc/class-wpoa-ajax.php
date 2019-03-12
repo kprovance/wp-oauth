@@ -54,7 +54,7 @@ if ( ! class_exists( 'WPOA_AJAX' ) ) {
 						if ( '1' === get_option( 'wpoa_email_notify_unlink' ) ) {
 							$message = $current_user->user_login . ' unlinked ' . $provider . ' from their account.';
 
-							$x = wp_mail( WPOA::$admin_email, '[' . get_option( 'blogname' )'] Unlinked Account', $message );
+							$x = wp_mail( WPOA::$admin_email, '[' . get_option( 'blogname' ) . '] Unlinked Account', $message );
 						}
 					}
 
