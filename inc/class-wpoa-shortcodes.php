@@ -75,7 +75,7 @@ if ( ! class_exists( 'WPOA_Shortcodes' ) ) {
 				$local_time          = strtotime( '-' . sanitize_text_field( wp_unslash( $_COOKIE['gmtoffset'] ) ) . ' hours', $time_linked ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
 				$nonce               = wp_create_nonce( 'wpoa-unlink-nonce' );
 
-				$html .= '<div>' . esc_html( $oauth_provider ) . ' as ' . esc_html( $linked_email ) . esc_html( $linked_name ) . ' on ' . esc_html( date( 'F d, Y h:i A', $local_time ) ) . ' <a class="wpoa-unlink-account" data-nonce="' . esc_attr( $nonce ) . '" data-wpoa-identity-row="' . esc_attr( $wpoa_row->umeta_id ) . '" href="#">Unlink</a></div>';
+				$html .= '<div>' . esc_html( $oauth_provider ) . ' as ' . esc_html( $linked_email ) . esc_html( $linked_name ) . ' on ' . esc_html( date( 'F d, Y h:i A', $local_time ) ) . ' <a class="wpoa-unlink-account" data-provider="' . esc_attr( $oauth_provider ) . '" data-nonce="' . esc_attr( $nonce ) . '" data-wpoa-identity-row="' . esc_attr( $wpoa_row->umeta_id ) . '" href="#">Unlink</a></div>';
 			}
 
 			$html .= '</div>';
