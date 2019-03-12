@@ -350,6 +350,7 @@
 				var btn             = $( this );
 				var wpoaIdentityRow = btn.data( 'wpoa-identity-row' );
 				var nonce           = btn.data( 'nonce' );
+				var provider        = btn.data( 'provider' );
 				var postData        = {};
 
 				event.preventDefault();
@@ -360,7 +361,8 @@
 				postData = {
 					action: 'wpoa_unlink_account',
 					wpoa_identity_row: wpoaIdentityRow,
-					nonce: nonce
+					nonce: nonce,
+					provider: provider
 				};
 
 				$.ajax(

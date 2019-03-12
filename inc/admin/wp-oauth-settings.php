@@ -388,6 +388,28 @@ $cc_ux       = wpoa_cc_ux();
 										Facebook, LinkedIn, etc...</p>
 								</td>
 							</tr>
+							<tr valign='top' id='has-tip' class="has-tip">
+								<th scope='row'>Email Notify on Account Linking: <a href="#" class="tip-button">[?]</a></th>
+								<td>
+									<input
+											type='checkbox'
+											name='wpoa_email_notify_link'
+											value='1' <?php checked( '1' === get_option( 'wpoa_email_notify_link' ) ); ?>
+									/>
+									<p class="tip-message">Send an email to site admin when a user links an account.</p>
+								</td>
+							</tr>
+							<tr valign='top' id='has-tip' class="has-tip">
+								<th scope='row'>Email Notify on Account Unlinking: <a href="#" class="tip-button">[?]</a></th>
+								<td>
+									<input
+											type='checkbox'
+											name='wpoa_email_notify_unlink'
+											value='1' <?php checked( '1' === get_option( 'wpoa_email_notify_unlink' ) ); ?>
+									/>
+									<p class="tip-message">Send an email to site admin when a user unlinks an account.</p>
+								</td>
+							</tr>
 						</table> <!-- .form-table -->
 						<?php submit_button( 'Save all settings' ); ?>
 					</div> <!-- .form-padding -->

@@ -275,10 +275,11 @@ if ( ! class_exists( 'WPOA_Login' ) ) {
 				$user_id = $current_user->ID;
 				$this->link_account( $user_id, $oauth_identity );
 
-				$email   = get_option( 'admin_email' );
-				$message = $current_user->user_login . ' just linked ' . $_SESSION['WPOA']['PROVIDER'] . ' to their account.' . "\n\n" . 'Linked EMail: ' . $oauth_identity['email'] . "\n\n" . $oauth_identity['name'];
+				if ( '1' === get_option( 'wpoa_email_notify_link' ) ) {
+					$message = $current_user->user_login . ' linked ' . $_SESSION['WPOA']['PROVIDER'] . ' to their account.' . "\n\n" . 'Linked Username: ' . $oauth_identity['name'] . "\n\n" . 'Linked Email: ' . $oauth_identity['email'];
 
-				$x = wp_mail( $email, '[Redux.io] Linked Account', $message );
+					$x = wp_mail( WPOA::$admin_email, '[Redux.io] Linked Account', $message );
+				}
 
 				// after linking the account, redirect user to their last url.
 				self::end_login( 'Your account was linked successfully with your third party authentication provider.' );

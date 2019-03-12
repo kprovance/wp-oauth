@@ -37,6 +37,7 @@ if ( ! class_exists( 'WPOA_AJAX' ) ) {
 
 				// get wpoa_identity row index that the user wishes to unlink.
 				$wpoa_identity_row = isset( $_POST['wpoa_identity_row'] ) ? sanitize_text_field( wp_unslash( $_POST['wpoa_identity_row'] ) ) : '';
+				$provider          = isset( $_POST['provider'] ) ? sanitize_text_field( wp_unslash( $_POST['provider'] ) ) : '';
 
 				if ( '' !== $wpoa_identity_row ) {
 
@@ -49,6 +50,14 @@ if ( ! class_exists( 'WPOA_AJAX' ) ) {
 				}
 
 				if ( $query_result ) {
+					if ( '' !== $provider ) {
+						if ( '1' === get_option( 'wpoa_email_notify_unlink' ) ) {
+							$message = $current_user->user_login . ' unlinked ' . $provider . ' from their account.';
+
+							$x = wp_mail( WPOA::$admin_email, '[Redux.io] Unlinked Account', $message );
+						}
+					}
+
 					echo wp_json_encode( array( 'result' => 1 ) );
 
 					die();

@@ -46,6 +46,13 @@ if ( ! class_exists( 'WPOA' ) ) {
 		public static $current_design = '';
 
 		/**
+		 * Admin email from General settings.
+		 *
+		 * @var string
+		 */
+		public static $admin_email = '';
+
+		/**
 		 * Login class.
 		 *
 		 * @var null
@@ -73,6 +80,8 @@ if ( ! class_exists( 'WPOA' ) ) {
 			'wpoa_logout_redirect_page'             => 0,               // any whole number (wordpress page id).
 			'wpoa_logout_redirect_url'              => '',              // any string (url).
 			'wpoa_logout_inactive_users'            => 0,               // any whole number (minutes).
+			'wpoa_email_notify_link'                => 1,
+			'wpoa_email_notify_unlink'              => 1,
 			'wpoa_hide_wordpress_login_form'        => 0,               // 0, 1.
 			'wpoa_logo_links_to_site'               => 0,               // 0, 1.
 			'wpoa_logo_image'                       => '',              // any string (image url).
@@ -166,6 +175,8 @@ if ( ! class_exists( 'WPOA' ) ) {
 
 				self::$dir = plugin_dir_path( __FILE__ );
 				self::$url = plugin_dir_url( __FILE__ );
+
+				self::$admin_email = get_option( 'admin_email' );
 
 				self::$instance->includes();
 				self::$instance->hooks();
