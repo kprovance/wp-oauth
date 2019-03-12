@@ -172,11 +172,10 @@ if ( ! class_exists( 'WPOA_Login' ) ) {
 			// Generate the login buttons for available providers.
 			// TODO: don't hard-code the buttons/providers here, we want to be able to add more providers without having to update this function...
 			$services = WPOA::get_services();
-			$html = '';
+			$html     = '';
+
 			foreach ( $services as $key => $title ) {
-				//if ( isset( $_SESSION['WPOA']['accounts'] ) && ! isset( $_SESSION['WPOA']['accounts'][ $key ] ) ) {
-					$html .= $this->login_button( $key, $title, $atts );
-				//}
+				$html .= $this->login_button( $key, $title, $atts );
 			}
 
 			if ( '' === $html ) {
@@ -369,14 +368,6 @@ if ( ! class_exists( 'WPOA_Login' ) ) {
 
 			// Get the wpoa_identity records.
 			$query_string = "SELECT * FROM $wpdb->usermeta WHERE $user_id = $wpdb->usermeta.user_id AND $wpdb->usermeta.meta_key = 'wpoa_identity'";
-
-			$accounts = array();
-			foreach ( $query_result as $item ) {
-				$parts                               = explode( '|', $item->meta_value );
-				$accounts[ strtolower( $parts[0] ) ] = $parts[1];
-			}
-
-			$_SESSION['WPOA']['accounts'] = $accounts;
 
 			$redirect_override = apply_filters( 'wpoa_login_redirect_override', $_SESSION['WPOA']['DESIGN'], $last_url );
 
