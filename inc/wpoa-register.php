@@ -105,7 +105,7 @@ if ( false === $update_username_result ) { // || false === $update_nickname_resu
 	WPOA::$login->link_account( $user_id, $oauth_identity );
 
 	if ( '1' === get_option( 'wpoa_email_notify_link' ) ) {
-		$message = $current_user->user_login . ' created an account using their ' . $_SESSION['WPOA']['PROVIDER'] . ' account.' . "\n\n" . 'Username: ' . $oauth_identity['name'] . "\n\n" . 'EMail: ' . $oauth_identity['email'];
+		$message = 'A new account was created via ' . $_SESSION['WPOA']['PROVIDER'] . '.' . "\n\n" . 'Username: ' . $oauth_identity['name'] . "\n\n" . 'EMail: ' . $oauth_identity['email'];
 
 		$x = wp_mail( WPOA::$admin_email, '[' . get_option( 'blogname' ) . '] New Account', $message );
 	}
